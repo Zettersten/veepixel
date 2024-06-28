@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeePixel</title>
+    <link rel="stylesheet" href="dist/index.css">
+</head>
+<body>
+    <div id="game">
+      <div id="floor"></div>
+    </div>
+    <script src="dist/index.mjs" type="module"></script>
+    <script>
+        document.write(
+          '<script src="http://' +
+            (location.host || '${1:localhost}').split(':')[0] +
+            ':${2:35729}/livereload.js?snipver=1"></' +
+            'script>'
+        );
+      </script>
+</body>
+</html>
