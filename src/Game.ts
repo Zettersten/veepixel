@@ -1,31 +1,47 @@
 import { Floor } from "./Floor";
 import { Avatar } from "./Avatar";
 
+/**
+ * Represents the main game logic.
+ */
 export class Game {
     private readonly timeStep: number = 1000 / 30; // 30 FPS
     private lastTime: number = 0;
     private accumulator: number = 0;
     private gameRunning: boolean = false;
-    private floor: Floor;
+    private readonly floor: Floor;
     private selectedAvatar: Avatar | null = null;
 
+    /**
+     * Creates a new Game instance.
+     * @param floor - The floor on which the game takes place.
+     */
     constructor(floor: Floor) {
         this.floor = floor;
         this.setupKeyboardListeners();
         this.setupMouseListeners();
     }
 
-    start() {
+    /**
+     * Starts the game loop.
+     */
+    start(): void {
         this.gameRunning = true;
         this.lastTime = performance.now();
         this.gameLoop();
     }
 
-    stop() {
+    /**
+     * Stops the game loop.
+     */
+    stop(): void {
         this.gameRunning = false;
     }
 
-    private gameLoop() {
+    /**
+     * The main game loop.
+     */
+    private gameLoop(): void {
         if (!this.gameRunning) return;
 
         const currentTime = performance.now();
@@ -39,21 +55,21 @@ export class Game {
             this.accumulator -= this.timeStep;
         }
 
-        this.render();
         requestAnimationFrame(() => this.gameLoop());
     }
 
-    private update() {
-        this.floor.getAvatars().forEach(avatar => {
-            // Perform any necessary updates for each avatar
-        });
+    /**
+     * Updates the game state.
+     */
+    private update(): void {
+        // Perform any necessary updates for each avatar
+        // Currently empty as there are no continuous updates needed
     }
 
-    private render() {
-        // The browser handles rendering of the updated positions
-    }
-
-    private setupKeyboardListeners() {
+    /**
+     * Sets up keyboard listeners for avatar movement.
+     */
+    private setupKeyboardListeners(): void {
         document.addEventListener('keydown', (event) => {
             if (!this.selectedAvatar) return;
 
@@ -76,23 +92,28 @@ export class Game {
         });
     }
 
-    private setupMouseListeners() {
+    /**
+     * Sets up mouse listeners for avatar selection.
+     */
+    private setupMouseListeners(): void {
         this.floor.getElement().addEventListener('mousedown', (event) => {
             const clickedElement = event.target as HTMLElement;
             const clickedAvatar = this.floor.getAvatars().find(avatar => avatar.getElement() === clickedElement);
+            
             if (clickedAvatar) {
                 this.selectAvatar(clickedAvatar);
-            } else {
-                // Deselect when clicking outside any avatar
-                if (this.selectedAvatar) {
-                    this.selectedAvatar.setSelected(false);
-                    this.selectedAvatar = null;
-                }
+            } else if (this.selectedAvatar) {
+                this.selectedAvatar.setSelected(false);
+                this.selectedAvatar = null;
             }
         });
     }
 
-    public selectAvatar(avatar: Avatar) {
+    /**
+     * Selects an avatar.
+     * @param avatar - The avatar to select.
+     */
+    public selectAvatar(avatar: Avatar): void {
         if (this.selectedAvatar) {
             this.selectedAvatar.setSelected(false);
         }
@@ -104,12 +125,13 @@ export class Game {
         }
     }
 
-    public addAvatar(avatar: Avatar) {
-
-        this.floor.placeAvatarEvenlySpacedAppart(avatar);
-
+    /**
+     * Adds an avatar to the game.
+     * @param avatar - The avatar to add.
+     */
+    public addAvatar(avatar: Avatar): void {
+        this.floor.placeAvatarRandomly(avatar);
         avatar.startAnimation('breathBack');
-
         avatar.getElement().addEventListener('mousedown', (event) => {
             avatar.startDrag(event);
         });
