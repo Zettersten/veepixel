@@ -70,26 +70,45 @@ export class Game {
      * Sets up keyboard listeners for avatar movement.
      */
     private setupKeyboardListeners(): void {
-        document.addEventListener('keydown', (event) => {
-            if (!this.selectedAvatar) return;
+        document.addEventListener('keydown', this.onKeyDown);
+        document.addEventListener('keyup', this.onKeyUp);
+    }
 
-            const moveDistance = 10; // pixels to move per key press
+    private onKeyDown = (event: KeyboardEvent) => {
+        if (!this.selectedAvatar) return;
 
-            switch (event.key) {
-                case 'ArrowLeft':
-                    this.selectedAvatar.move(-moveDistance, 0);
-                    break;
-                case 'ArrowRight':
-                    this.selectedAvatar.move(moveDistance, 0);
-                    break;
-                case 'ArrowUp':
-                    this.selectedAvatar.move(0, -moveDistance);
-                    break;
-                case 'ArrowDown':
-                    this.selectedAvatar.move(0, moveDistance);
-                    break;
-            }
-        });
+        const moveDistance = 5; // pixels to move per frame
+
+        switch (event.key) {
+            case 'ArrowLeft':
+                this.selectedAvatar.move(-moveDistance, 0);
+                break;
+            case 'ArrowRight':
+                this.selectedAvatar.move(moveDistance, 0);
+                break;
+            case 'ArrowUp':
+                this.selectedAvatar.move(0, -moveDistance);
+                break;
+            case 'ArrowDown':
+                this.selectedAvatar.move(0, moveDistance);
+                break;
+            case ' ': // Spacebar
+                this.selectedAvatar.jump();
+                break;
+        }
+    }
+
+    private onKeyUp = (event: KeyboardEvent) => {
+        if (!this.selectedAvatar) return;
+
+        switch (event.key) {
+            case 'ArrowLeft':
+            case 'ArrowRight':
+            case 'ArrowUp':
+            case 'ArrowDown':
+                this.selectedAvatar.stopMovement();
+                break;
+        }
     }
 
     /**

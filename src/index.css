@@ -28,7 +28,8 @@ body {
 }
 
 /* Style the main container div */
-body > div {
+#game,
+#mask {
     max-width: 1920px;
     max-height: 1080px;
     width: 100%;
@@ -36,6 +37,14 @@ body > div {
     background: url(../assets/backgrounds/stadium.png) no-repeat center center;
     background-size: cover;
     image-rendering: pixelated;
+    position: relative;
+    z-index: 0;
+}
+
+#mask {
+    background: url(../assets/backgrounds/stadium-mask.png) no-repeat center center;
+    z-index: 1;
+    pointer-events: none;
 }
 
 /* Style the floor element */
@@ -44,4 +53,5 @@ body > div {
     bottom: 0;
     width: 100%;
     height: calc(37% + 178px);
+    will-change: transform;
 }

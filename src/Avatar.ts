@@ -1,776 +1,12 @@
 import { Floor } from "./Floor";
-import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites } from "./Types";
+import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, MovementDirectionType } from "./Types";
 
-const defaultAvatarSprites: AvatarSprites = {
-    breathBack: [{
-        index: 0,
-        offsetX: 0,
-        offsetY: -192
-    },
-    {
-        index: 1,
-        offsetX: -192,
-        offsetY: -192
-    },
-    {
-        index: 2,
-        offsetX: -384,
-        offsetY: -192
-    },
-    {
-        index: 3,
-        offsetX: -576,
-        offsetY: -192
-    },
-    {
-        index: 4,
-        offsetX: -768,
-        offsetY: -192
-    },
-    {
-        index: 5,
-        offsetX: -960,
-        offsetY: -192
-    },
-    {
-        index: 6,
-        offsetX: -1152,
-        offsetY: -192
-    },
-    {
-        index: 7,
-        offsetX: -1344,
-        offsetY: -192
-    },
-    {
-        index: 8,
-        offsetX: -1536,
-        offsetY: -192
-    },
-    {
-        index: 9,
-        offsetX: -1728,
-        offsetY: -192
-    },
-    {
-        index: 10,
-        offsetX: -1920,
-        offsetY: -192
-    },
-    {
-        index: 11,
-        offsetX: -2112,
-        offsetY: -192
-    }],
-    breathFront: [
-        {
-            index: 0,
-            offsetX: 0,
-            offsetY: -384
-        },
-        {
-            index: 1,
-            offsetX: -192,
-            offsetY: -384
-        },
-        {
-            index: 2,
-            offsetX: -384,
-            offsetY: -384
-        },
-        {
-            index: 3,
-            offsetX: -576,
-            offsetY: -384
-        },
-        {
-            index: 4,
-            offsetX: -768,
-            offsetY: -384
-        },
-        {
-            index: 5,
-            offsetX: -960,
-            offsetY: -384
-        },
-        {
-            index: 6,
-            offsetX: -1152,
-            offsetY: -384
-        },
-        {
-            index: 7,
-            offsetX: -1344,
-            offsetY: -384
-        },
-        {
-            index: 8,
-            offsetX: -1536,
-            offsetY: -384
-        },
-        {
-            index: 9,
-            offsetX: -1728,
-            offsetY: -384
-        },
-        {
-            index: 10,
-            offsetX: -1920,
-            offsetY: -384
-        },
-        {
-            index: 11,
-            offsetX: -2112,
-            offsetY: -384
-        }
-    ],
-    clapping: [
-        {
-            index: 0,
-            offsetX: 0,
-            offsetY: -576
-        },
-        {
-            index: 1,
-            offsetX: -192,
-            offsetY: -576
-        },
-        {
-            index: 2,
-            offsetX: -384,
-            offsetY: -576
-        },
-        {
-            index: 3,
-            offsetX: -576,
-            offsetY: -576
-        },
-        {
-            index: 4,
-            offsetX: -768,
-            offsetY: -576
-        },
-        {
-            index: 5,
-            offsetX: -960,
-            offsetY: -576
-        },
-        {
-            index: 6,
-            offsetX: -1152,
-            offsetY: -576
-        },
-        {
-            index: 7,
-            offsetX: -1344,
-            offsetY: -576
-        },
-        {
-            index: 8,
-            offsetX: -1536,
-            offsetY: -576
-        },
-        {
-            index: 9,
-            offsetX: -1728,
-            offsetY: -576
-        },
-        {
-            index: 10,
-            offsetX: -1920,
-            offsetY: -576
-        },
-        {
-            index: 11,
-            offsetX: -2112,
-            offsetY: -576
-        },
-    ],
-    draggedDown: [
-        {
-            index: 0,
-            offsetX: 0,
-            offsetY: -768,
-        },
-        {
-            index: 1,
-            offsetX: -192,
-            offsetY: -768,
-        },
-        {
-            index: 2,
-            offsetX: -384,
-            offsetY: -768,
-        }
-    ],
-    draggedLeft: [
-        {
-            index: 0,
-            offsetX: -576,
-            offsetY: -768
-        },
-        {
-            index: 1,
-            offsetX: -768,
-            offsetY: -768
-        },
-    ],
-    draggedRight: [
-        {
-            index: 0,
-            offsetX: -960,
-            offsetY: -768
-        },
-        {
-            index: 1,
-            offsetX: -1152,
-            offsetY: -768
-        },
-    ],
-    draggedUp: [
-        {
-            index: 0,
-            offsetX: -1344,
-            offsetY: -768
-        },
-        {
-            index: 1,
-            offsetX: -1536,
-            offsetY: -768
-        }
-    ],
-    handsUp: [
-        {
-            index: 0,
-            offsetX: -1728,
-            offsetY: -768
-        },
-        {
-            index: 1,
-            offsetX: -1920,
-            offsetY: -768
-        },
-        {
-            index: 2,
-            offsetX: -2112,
-            offsetY: -768
-        },
-        {
-            index: 3,
-            offsetX: 0,
-            offsetY: -960
-        },
-        {
-            index: 4,
-            offsetX: -192,
-            offsetY: -960
-        },
-        {
-            index: 5,
-            offsetX: -384,
-            offsetY: -960
-        },
-        {
-            index: 6,
-            offsetX: -576,
-            offsetY: -960
-        },
-        {
-            index: 7,
-            offsetX: -768,
-            offsetY: -960
-        },
-        {
-            index: 8,
-            offsetX: -960,
-            offsetY: -960
-        },
-        {
-            index: 9,
-            offsetX: -1152,
-            offsetY: -960
-        },
-        {
-            index: 10,
-            offsetX: -1344,
-            offsetY: -960
-        },
-        {
-            index: 11,
-            offsetX: -1536,
-            offsetY: -960
-        },
-    ],
-    hovering: [
-        {
-            index: 0,
-            offsetX: -1728,
-            offsetY: -960
-        },
-        {
-            index: 1,
-            offsetX: -1920,
-            offsetY: -960
-        },
-        {
-            index: 2,
-            offsetX: -2112,
-            offsetY: -960
-        },
-        {
-            index: 3,
-            offsetX: 0,
-            offsetY: -1152
-        },
-        {
-            index: 4,
-            offsetX: -192,
-            offsetY: -1152
-        },
-        {
-            index: 5,
-            offsetX: -384,
-            offsetY: -1152
-        },
-        {
-            index: 6,
-            offsetX: -576,
-            offsetY: -1152
-        },
-        {
-            index: 7,
-            offsetX: -768,
-            offsetY: -1152
-        },
-        {
-            index: 8,
-            offsetX: -960,
-            offsetY: -1152
-        },
-        {
-            index: 9,
-            offsetX: -1152,
-            offsetY: -1152
-        },
-        {
-            index: 10,
-            offsetX: -1344,
-            offsetY: -1152
-        },
-        {
-            index: 11,
-            offsetX: -1536,
-            offsetY: -1152
-        },
-        {
-            index: 12,
-            offsetX: -1728,
-            offsetY: -1152
-        },
-    ],
-    jumping: [
-        {
-            index: 0,
-            offsetX: -1920,
-            offsetY: -1152,
-        },
-        {
-            index: 1,
-            offsetX: -2112,
-            offsetY: -1152,
-        },
-        {
-            index: 2,
-            offsetX: 0,
-            offsetY: -1344,
-        },
-        {
-            index: 3,
-            offsetX: -192,
-            offsetY: -1344,
-        },
-        {
-            index: 4,
-            offsetX: -384,
-            offsetY: -1344,
-        },
-        {
-            index: 5,
-            offsetX: -576,
-            offsetY: -1344,
-        },
-        {
-            index: 6,
-            offsetX: -768,
-            offsetY: -1344,
-        },
-        {
-            index: 7,
-            offsetX: -960,
-            offsetY: -1344,
-        },
-        {
-            index: 8,
-            offsetX: -1152,
-            offsetY: -1344,
-        },
-        {
-            index: 9,
-            offsetX: -1344,
-            offsetY: -1344,
-        },
-        {
-            index: 10,
-            offsetX: -1536,
-            offsetY: -1344,
-        },
-        {
-            index: 11,
-            offsetX: -1728,
-            offsetY: -1344,
-        },
-        {
-            index: 12,
-            offsetX: -1920,
-            offsetY: -1344,
-        },
-    ],
-    swayBack: [
-        {
-            index: 0,
-            offsetX: -2112,
-            offsetY: -1344
-        },
-        {
-            index: 1,
-            offsetX: 0,
-            offsetY: -1536
-        },
-        {
-            index: 2,
-            offsetX: -192,
-            offsetY: -1536
-        },
-        {
-            index: 3,
-            offsetX: -384,
-            offsetY: -1536
-        },
-        {
-            index: 4,
-            offsetX: -576,
-            offsetY: -1536
-        },
-        {
-            index: 5,
-            offsetX: -768,
-            offsetY: -1536
-        },
-        {
-            index: 6,
-            offsetX: -960,
-            offsetY: -1536
-        },
-        {
-            index: 7,
-            offsetX: -1152,
-            offsetY: -1536
-        },
-        {
-            index: 8,
-            offsetX: -1344,
-            offsetY: -1536
-        },
-        {
-            index: 9,
-            offsetX: -1536,
-            offsetY: -1536
-        },
-        {
-            index: 10,
-            offsetX: -1728,
-            offsetY: -1536
-        },
-        {
-            index: 11,
-            offsetX: -1920,
-            offsetY: -1536
-        },
-        {
-            index: 12,
-            offsetX: -2112,
-            offsetY: -1536
-        }
-    ],
-    swayFront: [
-        {
-            index: 0,
-            offsetX: 0,
-            offsetY: -1728
-        },
-        {
-            index: 1,
-            offsetX: -192,
-            offsetY: -1728
-        },
-        {
-            index: 2,
-            offsetX: -384,
-            offsetY: -1728
-        },
-        {
-            index: 3,
-            offsetX: -576,
-            offsetY: -1728
-        },
-        {
-            index: 4,
-            offsetX: -768,
-            offsetY: -1728
-        },
-        {
-            index: 5,
-            offsetX: -960,
-            offsetY: -1728
-        },
-        {
-            index: 6,
-            offsetX: -1152,
-            offsetY: -1728
-        },
-        {
-            index: 7,
-            offsetX: -1344,
-            offsetY: -1728
-        },
-        {
-            index: 8,
-            offsetX: -1536,
-            offsetY: -1728
-        },
-        {
-            index: 9,
-            offsetX: -1728,
-            offsetY: -1728
-        },
-        {
-            index: 10,
-            offsetX: -1920,
-            offsetY: -1728
-        },
-        {
-            index: 11,
-            offsetX: -2112,
-            offsetY: -1728
-        },
-        {
-            index: 12,
-            offsetX: 0,
-            offsetY: -1920
-        }
-    ],
-    turnAround: [
-        {
-            index: 0,
-            offsetX: -192,
-            offsetY: -2112
-        },
-        {
-            index: 1,
-            offsetX: -384,
-            offsetY: -2112
-        },
-        {
-            index: 2,
-            offsetX: -576,
-            offsetY: -2112
-        },
-        {
-            index: 3,
-            offsetX: -768,
-            offsetY: -2112
-        },
-        {
-            index: 4,
-            offsetX: -960,
-            offsetY: -2112
-        },
-        {
-            index: 5,
-            offsetX: -1152,
-            offsetY: -2112
-        },
-        {
-            index: 6,
-            offsetX: -1344,
-            offsetY: -2112
-        },
-        {
-            index: 7,
-            offsetX: -1536,
-            offsetY: -2112
-        },
-        {
-            index: 8,
-            offsetX: -1728,
-            offsetY: -2112
-        },
-        {
-            index: 9,
-            offsetX: -1920,
-            offsetY: -2112
-        },
-        {
-            index: 10,
-            offsetX: -2112,
-            offsetY: -2112
-        },
-        {
-            index: 11,
-            offsetX: -2304,
-            offsetY: 0
-        },
-        {
-            index: 12,
-            offsetX: -2304,
-            offsetY: -192
-        },
-        {
-            index: 13,
-            offsetX: -2304,
-            offsetY: -384
-        }
-    ],
-    talk: [
-        {
-            index: 0,
-            offsetX: -192,
-            offsetY: -1920
-        },
-        {
-            index: 1,
-            offsetX: -384,
-            offsetY: -1920
-        },
-        {
-            index: 2,
-            offsetX: -576,
-            offsetY: -1920
-        },
-        {
-            index: 3,
-            offsetX: -768,
-            offsetY: -1920
-        },
-        {
-            index: 4,
-            offsetX: -960,
-            offsetY: -1920
-        },
-        {
-            index: 5,
-            offsetX: -1152,
-            offsetY: -1920
-        },
-        {
-            index: 6,
-            offsetX: -1344,
-            offsetY: -1920
-        },
-        {
-            index: 7,
-            offsetX: -1536,
-            offsetY: -1920
-        },
-        {
-            index: 8,
-            offsetX: -1728,
-            offsetY: -1920
-        },
-        {
-            index: 9,
-            offsetX: -1920,
-            offsetY: -1920
-        },
-        {
-            index: 10,
-            offsetX: -2112,
-            offsetY: -1920
-        },
-        {
-            index: 11,
-            offsetX: 0,
-            offsetY: -2112
-        }
-    ],
-    blink: [
-        {
-            index: 0,
-            offsetX: 0,
-            offsetY: 0
-        },
-        {
-            index: 1,
-            offsetX: -192,
-            offsetY: 0
-        },
-        {
-            index: 2,
-            offsetX: -384,
-            offsetY: 0
-        },
-        {
-            index: 3,
-            offsetX: -576,
-            offsetY: 0
-        },
-        {
-            index: 4,
-            offsetX: -768,
-            offsetY: 0
-        },
-        {
-            index: 5,
-            offsetX: -960,
-            offsetY: 0
-        },
-        {
-            index: 6,
-            offsetX: -1152,
-            offsetY: 0
-        },
-        {
-            index: 7,
-            offsetX: -1344,
-            offsetY: 0
-        },
-        {
-            index: 8,
-            offsetX: -1536,
-            offsetY: 0
-        },
-        {
-            index: 9,
-            offsetX: -1728,
-            offsetY: 0
-        },
-        {
-            index: 10,
-            offsetX: -1920,
-            offsetY: 0
-        },
-        {
-            index: 11,
-            offsetX: -2112,
-            offsetY: 0
-        }
-    ],
-};
 
 /**
  * Represents an avatar in the game.
  */
 export class Avatar {
+    private currentMovementDirection: MovementDirectionType = null;
     private oneTimeAnimations: Set<AvatarSpriteType> = new Set(['turnAround']);
     private nextAnimation: AvatarSpriteType | null = null;
     private readonly height: number = 192;
@@ -786,15 +22,19 @@ export class Avatar {
     private isHovering: boolean = false;
     private isSelected: boolean = false;
     private readonly floor: Floor;
+    private sprites: AvatarSprites;
+    private isJumping: boolean = false;
 
     /**
      * Creates a new Avatar instance.
      * @param floor - The floor on which the avatar is placed.
      * @param options - Avatar options including path and name.
+     * @param sprites - All sprite offset positions for the avatar.
      */
-    constructor(floor: Floor, options: AvatarOptions) {
+    constructor(floor: Floor, options: AvatarOptions, sprites: AvatarSprites) {
         this.options = options;
         this.floor = floor;
+        this.sprites = sprites;
         this.element = this.createAvatarElement();
         this.setupHoverListeners();
     }
@@ -848,7 +88,7 @@ export class Avatar {
     }
 
     /**
-     * Moves the avatar by a given delta.
+     * Moves the avatar by a given delta and updates the animation.
      * @param dx - The change in x position.
      * @param dy - The change in y position.
      */
@@ -858,6 +98,26 @@ export class Avatar {
         const newY = currentTransform.m42 + dy;
         const constrained = this.floor.constrainPosition(newX, newY);
         this.setElementPosition(constrained.y, constrained.x);
+
+        // Determine the movement direction
+        if (Math.abs(dx) > Math.abs(dy)) {
+            this.currentMovementDirection = dx > 0 ? 'right' : 'left';
+        } else if (dy !== 0) {
+            this.currentMovementDirection = dy > 0 ? 'down' : 'up';
+        }
+
+        // Start the appropriate walking animation
+        this.startWalkingAnimation();
+    }
+
+    /**
+         * Starts the jumping animation, playing it only once.
+         */
+    public jump(): void {
+        if (!this.isJumping) {
+            this.isJumping = true;
+            this.startAnimation('jumping');
+        }
     }
 
     /**
@@ -873,15 +133,24 @@ export class Avatar {
         this.nextAnimation = nextAnimation;
 
         let index = 0;
-        const sprites = defaultAvatarSprites[spriteType];
+        const sprites = this.sprites[spriteType];
 
         const animate = () => {
             this.setSpritePosition(sprites[index]);
-            index = (index + 1) % sprites.length;
+            index++;
 
-            if (index === 0 && this.oneTimeAnimations.has(spriteType) && this.nextAnimation) {
-                this.startAnimation(this.nextAnimation);
-                return;
+            if (index >= sprites.length) {
+                if (spriteType === 'jumping') {
+                    this.isJumping = false;
+                    this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
+                    return;
+                } else if (this.oneTimeAnimations.has(spriteType) && this.nextAnimation) {
+                    this.startAnimation(this.nextAnimation);
+                    return;
+                } else {
+                    // Loop the current animation
+                    index = 0;
+                }
             }
         };
 
@@ -903,12 +172,12 @@ export class Avatar {
      * @param event - The mouse event that triggered the drag.
      */
     public startDrag(event: MouseEvent): void {
-        this.isDragging = true;        
+        this.isDragging = true;
         this.isHovering = false;
 
         const floorRect = this.floor.getElement().getBoundingClientRect();
         const avatarRect = this.element.getBoundingClientRect();
-        
+
         this.dragOffset = {
             x: event.clientX - (avatarRect.left - floorRect.left),
             y: event.clientY - (avatarRect.top - floorRect.top)
@@ -969,13 +238,45 @@ export class Avatar {
     }
 
     /**
+     * Starts the appropriate walking animation based on the current movement direction.
+     */
+    private startWalkingAnimation(): void {
+        switch (this.currentMovementDirection) {
+            case 'left':
+                this.startAnimation('swayBack');
+                break;
+            case 'right':
+                this.startAnimation('swayBack');
+                break;
+            case 'up':
+                this.startAnimation('swayBack');
+                break;
+            case 'down':
+                this.startAnimation('swayFront');
+                break;
+        }
+    }
+
+    /**
+     * Stops the current movement and resets to the default animation.
+     */
+    public stopMovement(): void {
+        this.currentMovementDirection = null;
+        this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
+    }
+
+    /**
      * Sets the selected state of the avatar.
      * @param selected - Whether the avatar is selected or not.
      */
     public setSelected(selected: boolean): void {
         this.isSelected = selected;
         this.element.style.filter = selected ? 'drop-shadow(2px 4px 6px yellow)' : 'none';
-        this.startAnimation(selected ? 'clapping' : (this.isHovering ? 'hovering' : 'breathBack'));
+        if (selected) {
+            this.startAnimation('clapping');
+        } else {
+            this.stopMovement(); // This will set the appropriate animation
+        }
     }
 
     /**

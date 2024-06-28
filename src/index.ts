@@ -10,7 +10,7 @@ function initializeGame(): void {
     const floor = new Floor();
     const game = new Game(floor);
 
-    const avatarCount = 10;
+    const avatarCount = 1;
     for (let i = 0; i < avatarCount; i++) {
         game.addAvatar(new AdaptableAlien(floor));
     }
