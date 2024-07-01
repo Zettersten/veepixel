@@ -1,12 +1,16 @@
-import { Avatar } from "../Avatar";
-import { Floor } from "../Floor";
 import json from "../../build/sprites/adaptable-alien.json";
+import { AvatarOptions, AvatarSprites } from "../Types";
 
-export class AdaptableAlien extends Avatar {
-    constructor(floor: Floor) {
-        super(floor, {
+export class AdaptableAlien {
+    
+    get options(): AvatarOptions {
+        return {
             path: "assets/sprites/adaptable-alien.png",
             name: "Adaptable Alien",
-        }, json);
+        };
+    }
+
+    get sprites(): AvatarSprites {
+        return json;
     }
 }

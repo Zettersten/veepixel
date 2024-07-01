@@ -2,17 +2,23 @@ import "./index.css";
 import { Game } from "./Game";
 import { AdaptableAlien } from "./Avatars/AdaptableAlien";
 import { Floor } from "./Floor";
+import { Music } from "./Music";
+import { AnimationManager } from "./AnimationManager";
 
 /**
  * Initializes and starts the game.
  */
 function initializeGame(): void {
+
+    const animationManager = new AnimationManager();
+    const music = new Music();
     const floor = new Floor();
-    const game = new Game(floor);
+    const game = new Game(floor, animationManager);
 
     const avatarCount = 1;
     for (let i = 0; i < avatarCount; i++) {
-        game.addAvatar(new AdaptableAlien(floor));
+        const avatar = new AdaptableAlien();
+        game.addAvatar(avatar.options, avatar.sprites);
     }
 
     game.start();

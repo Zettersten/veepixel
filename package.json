@@ -21,6 +21,7 @@
   "devDependencies": {
     "@unvt/sprite-one": "^0.1.1",
     "tsup": "^8.1.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "wavesurfer.js": "^7.8.0"
   }
 }

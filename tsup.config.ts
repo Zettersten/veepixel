@@ -5,5 +5,7 @@ export default defineConfig({
     splitting: false,
     sourcemap: true,
     clean: true,
-    format: ['esm']
+    format: ['esm'],
+    target: 'esnext',
+    bundle: true
 });

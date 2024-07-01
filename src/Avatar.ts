@@ -1,20 +1,18 @@
 import { Floor } from "./Floor";
 import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, MovementDirectionType } from "./Types";
 
-
 /**
  * Represents an avatar in the game.
  */
 export class Avatar {
     private currentMovementDirection: MovementDirectionType = null;
-    private oneTimeAnimations: Set<AvatarSpriteType> = new Set(['turnAround']);
-    private nextAnimation: AvatarSpriteType | null = null;
+    private oneTimeAnimations: Set<AvatarSpriteType> = new Set(['turnAround', 'jumping']);
     private readonly height: number = 192;
     private readonly width: number = 192;
     private readonly options: AvatarOptions;
     private element: HTMLDivElement;
-    private currentSpriteType: AvatarSpriteType | null;
-    private animationInterval: number | null = null;
+    private currentSpriteType: AvatarSpriteType | null = null;
+    private currentSpriteIndex: number = 0;
     private dragOffset: { x: number, y: number } | null = null;
     private lastPosition: { x: number, y: number } | null = null;
     private readonly dragThreshold: number = 1;
@@ -23,7 +21,6 @@ export class Avatar {
     private isSelected: boolean = false;
     private readonly floor: Floor;
     private sprites: AvatarSprites;
-    private isJumping: boolean = false;
 
     /**
      * Creates a new Avatar instance.
@@ -36,12 +33,11 @@ export class Avatar {
         this.floor = floor;
         this.sprites = sprites;
         this.element = this.createAvatarElement();
-        this.setupHoverListeners();
+        this.setupEventListeners();
     }
 
     /**
      * Creates the avatar's DOM element.
-     * @returns The created HTMLDivElement for the avatar.
      */
     private createAvatarElement(): HTMLDivElement {
         const element = document.createElement('div');
@@ -63,8 +59,16 @@ export class Avatar {
     }
 
     /**
+     * Sets up event listeners for the avatar.
+     */
+    private setupEventListeners(): void {
+        this.element.addEventListener('mouseenter', this.onMouseEnter);
+        this.element.addEventListener('mouseleave', this.onMouseLeave);
+        this.element.addEventListener('mousedown', this.startDrag);
+    }
+
+    /**
      * Sets the sprite position for the avatar.
-     * @param sprite - The sprite to set.
      */
     private setSpritePosition(sprite: AvatarSprite): void {
         this.element.style.backgroundPosition = `${sprite.offsetX}px ${sprite.offsetY}px`;
@@ -99,79 +103,43 @@ export class Avatar {
         const constrained = this.floor.constrainPosition(newX, newY);
         this.setElementPosition(constrained.y, constrained.x);
 
-        // Determine the movement direction
-        if (Math.abs(dx) > Math.abs(dy)) {
-            this.currentMovementDirection = dx > 0 ? 'right' : 'left';
-        } else if (dy !== 0) {
-            this.currentMovementDirection = dy > 0 ? 'down' : 'up';
-        }
+        this.currentMovementDirection = 
+            Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') :
+            dy !== 0 ? (dy > 0 ? 'down' : 'up') : null;
 
-        // Start the appropriate walking animation
-        this.startWalkingAnimation();
-    }
-
-    /**
-         * Starts the jumping animation, playing it only once.
-         */
-    public jump(): void {
-        if (!this.isJumping) {
-            this.isJumping = true;
-            this.startAnimation('jumping');
-        }
+        this.startAnimation(this.currentMovementDirection === 'down' ? 'swayFront' : 'swayBack');
     }
 
     /**
      * Starts an animation for the avatar.
      * @param spriteType - The type of sprite animation to start.
-     * @param nextAnimation - The next animation to play after the current one (optional).
      */
-    public startAnimation(spriteType: AvatarSpriteType, nextAnimation: AvatarSpriteType | null = null): void {
-        if (this.currentSpriteType === spriteType && this.nextAnimation === nextAnimation) return;
+    public startAnimation(spriteType: AvatarSpriteType): void {
+        if (this.currentSpriteType === spriteType) return;
         
-        this.stopAnimation();
         this.currentSpriteType = spriteType;
-        this.nextAnimation = nextAnimation;
-
-        let index = 0;
-        const sprites = this.sprites[spriteType];
-
-        const animate = () => {
-            this.setSpritePosition(sprites[index]);
-            index++;
-
-            if (index >= sprites.length) {
-                if (spriteType === 'jumping') {
-                    this.isJumping = false;
-                    this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
-                    return;
-                } else if (this.oneTimeAnimations.has(spriteType) && this.nextAnimation) {
-                    this.startAnimation(this.nextAnimation);
-                    return;
-                } else {
-                    // Loop the current animation
-                    index = 0;
-                }
-            }
-        };
-
-        this.animationInterval = window.setInterval(animate, 100);
+        this.currentSpriteIndex = 0;
     }
 
     /**
-     * Stops the current animation.
+     * Updates the avatar's animation state.
      */
-    public stopAnimation(): void {
-        if (this.animationInterval !== null) {
-            clearInterval(this.animationInterval);
-            this.animationInterval = null;
+    public update(): void {
+        if (this.currentSpriteType && this.sprites[this.currentSpriteType]) {
+            const sprites = this.sprites[this.currentSpriteType];
+            this.currentSpriteIndex = (this.currentSpriteIndex + 1) % sprites.length;
+            this.setSpritePosition(sprites[this.currentSpriteIndex]);
+
+            if (this.oneTimeAnimations.has(this.currentSpriteType) && this.currentSpriteIndex === sprites.length - 1) {
+                this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
+            }
         }
     }
 
     /**
      * Starts dragging the avatar.
-     * @param event - The mouse event that triggered the drag.
      */
-    public startDrag(event: MouseEvent): void {
+    private startDrag = (event: MouseEvent): void => {
         this.isDragging = true;
         this.isHovering = false;
 
@@ -190,7 +158,6 @@ export class Avatar {
 
     /**
      * Handles the drag event.
-     * @param event - The mouse event during dragging.
      */
     private onDrag = (event: MouseEvent): void => {
         if (!this.dragOffset || !this.lastPosition || !this.isDragging) return;
@@ -199,18 +166,17 @@ export class Avatar {
         const newY = event.clientY - this.dragOffset.y;
 
         const constrainedPosition = this.floor.constrainPosition(newX, newY);
-
         this.setElementPosition(constrainedPosition.y, constrainedPosition.x);
 
         const dx = event.clientX - this.lastPosition.x;
         const dy = event.clientY - this.lastPosition.y;
 
         if (Math.abs(dx) > this.dragThreshold || Math.abs(dy) > this.dragThreshold) {
-            if (Math.abs(dx) > Math.abs(dy)) {
-                this.startAnimation(dx > 0 ? 'draggedRight' : 'draggedLeft');
-            } else {
-                this.startAnimation(dy > 0 ? 'draggedDown' : 'draggedUp');
-            }
+            this.startAnimation(
+                Math.abs(dx) > Math.abs(dy) 
+                    ? (dx > 0 ? 'draggedRight' : 'draggedLeft')
+                    : (dy > 0 ? 'draggedDown' : 'draggedUp')
+            );
         }
 
         this.lastPosition = { x: event.clientX, y: event.clientY };
@@ -238,26 +204,6 @@ export class Avatar {
     }
 
     /**
-     * Starts the appropriate walking animation based on the current movement direction.
-     */
-    private startWalkingAnimation(): void {
-        switch (this.currentMovementDirection) {
-            case 'left':
-                this.startAnimation('swayBack');
-                break;
-            case 'right':
-                this.startAnimation('swayBack');
-                break;
-            case 'up':
-                this.startAnimation('swayBack');
-                break;
-            case 'down':
-                this.startAnimation('swayFront');
-                break;
-        }
-    }
-
-    /**
      * Stops the current movement and resets to the default animation.
      */
     public stopMovement(): void {
@@ -272,19 +218,7 @@ export class Avatar {
     public setSelected(selected: boolean): void {
         this.isSelected = selected;
         this.element.style.filter = selected ? 'drop-shadow(2px 4px 6px yellow)' : 'none';
-        if (selected) {
-            this.startAnimation('clapping');
-        } else {
-            this.stopMovement(); // This will set the appropriate animation
-        }
-    }
-
-    /**
-     * Sets up hover listeners for the avatar.
-     */
-    private setupHoverListeners(): void {
-        this.element.addEventListener('mouseenter', this.onMouseEnter);
-        this.element.addEventListener('mouseleave', this.onMouseLeave);
+        this.startAnimation(selected ? 'clapping' : (this.isHovering ? 'hovering' : 'breathBack'));
     }
 
     /**
@@ -304,6 +238,15 @@ export class Avatar {
         if (!this.isDragging && !this.isSelected) {
             this.isHovering = false;
             this.startAnimation('breathBack');
+        }
+    }
+
+    /**
+     * Initiates a jump animation for the avatar.
+     */
+    public jump(): void {
+        if (this.currentSpriteType !== 'jumping') {
+            this.startAnimation('jumping');
         }
     }
 }

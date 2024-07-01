@@ -55,3 +55,25 @@ body {
     height: calc(37% + 178px);
     will-change: transform;
 }
+
+#nav {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    display: block;
+    height: 50px;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 20px;
+}
+
+.music {
+    height: 28px;
+    width: 160px;
+    margin: 20px;
+}

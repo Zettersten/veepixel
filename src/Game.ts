@@ -1,80 +1,54 @@
 import { Floor } from "./Floor";
 import { Avatar } from "./Avatar";
+import { AnimationManager } from "./AnimationManager";
+import { AvatarOptions, AvatarSprites } from "./Types";
 
 /**
  * Represents the main game logic.
  */
 export class Game {
-    private readonly timeStep: number = 1000 / 30; // 30 FPS
-    private lastTime: number = 0;
-    private accumulator: number = 0;
-    private gameRunning: boolean = false;
     private readonly floor: Floor;
     private selectedAvatar: Avatar | null = null;
+    private readonly animationManager: AnimationManager;
+    private avatars: Avatar[] = [];
 
     /**
      * Creates a new Game instance.
      * @param floor - The floor on which the game takes place.
      */
-    constructor(floor: Floor) {
+    constructor(floor: Floor, animationManager: AnimationManager) {
         this.floor = floor;
-        this.setupKeyboardListeners();
-        this.setupMouseListeners();
+        this.animationManager = animationManager;
+        this.setupEventListeners();
     }
 
     /**
-     * Starts the game loop.
+     * Sets up event listeners for the game.
      */
-    start(): void {
-        this.gameRunning = true;
-        this.lastTime = performance.now();
-        this.gameLoop();
-    }
-
-    /**
-     * Stops the game loop.
-     */
-    stop(): void {
-        this.gameRunning = false;
-    }
-
-    /**
-     * The main game loop.
-     */
-    private gameLoop(): void {
-        if (!this.gameRunning) return;
-
-        const currentTime = performance.now();
-        const deltaTime = currentTime - this.lastTime;
-        this.lastTime = currentTime;
-
-        this.accumulator += deltaTime;
-
-        while (this.accumulator >= this.timeStep) {
-            this.update();
-            this.accumulator -= this.timeStep;
-        }
-
-        requestAnimationFrame(() => this.gameLoop());
-    }
-
-    /**
-     * Updates the game state.
-     */
-    private update(): void {
-        // Perform any necessary updates for each avatar
-        // Currently empty as there are no continuous updates needed
-    }
-
-    /**
-     * Sets up keyboard listeners for avatar movement.
-     */
-    private setupKeyboardListeners(): void {
+    private setupEventListeners(): void {
         document.addEventListener('keydown', this.onKeyDown);
         document.addEventListener('keyup', this.onKeyUp);
+        this.floor.getElement().addEventListener('mousedown', this.onFloorClick);
     }
 
-    private onKeyDown = (event: KeyboardEvent) => {
+    /**
+     * Starts the game.
+     */
+    public start(): void {
+        this.animationManager.start();
+    }
+
+    /**
+     * Stops the game.
+     */
+    public stop(): void {
+        this.animationManager.stop();
+    }
+
+    /**
+     * Handles keydown events for avatar movement.
+     */
+    private onKeyDown = (event: KeyboardEvent): void => {
         if (!this.selectedAvatar) return;
 
         const moveDistance = 5; // pixels to move per frame
@@ -98,7 +72,10 @@ export class Game {
         }
     }
 
-    private onKeyUp = (event: KeyboardEvent) => {
+    /**
+     * Handles keyup events to stop avatar movement.
+     */
+    private onKeyUp = (event: KeyboardEvent): void => {
         if (!this.selectedAvatar) return;
 
         switch (event.key) {
@@ -112,20 +89,18 @@ export class Game {
     }
 
     /**
-     * Sets up mouse listeners for avatar selection.
+     * Handles click events on the floor for avatar selection.
      */
-    private setupMouseListeners(): void {
-        this.floor.getElement().addEventListener('mousedown', (event) => {
-            const clickedElement = event.target as HTMLElement;
-            const clickedAvatar = this.floor.getAvatars().find(avatar => avatar.getElement() === clickedElement);
-            
-            if (clickedAvatar) {
-                this.selectAvatar(clickedAvatar);
-            } else if (this.selectedAvatar) {
-                this.selectedAvatar.setSelected(false);
-                this.selectedAvatar = null;
-            }
-        });
+    private onFloorClick = (event: MouseEvent): void => {
+        const clickedElement = event.target as HTMLElement;
+        const clickedAvatar = this.avatars.find(avatar => avatar.getElement() === clickedElement);
+        
+        if (clickedAvatar) {
+            this.selectAvatar(clickedAvatar);
+        } else if (this.selectedAvatar) {
+            this.selectedAvatar.setSelected(false);
+            this.selectedAvatar = null;
+        }
     }
 
     /**
@@ -146,13 +121,42 @@ export class Game {
 
     /**
      * Adds an avatar to the game.
-     * @param avatar - The avatar to add.
+     * @param options - The options for creating the avatar.
+     * @param sprites - The sprite data for the avatar.
      */
-    public addAvatar(avatar: Avatar): void {
+    public addAvatar(options: AvatarOptions, sprites: AvatarSprites): void {
+        const avatar = new Avatar(this.floor, options, sprites);
         this.floor.placeAvatarRandomly(avatar);
+        this.avatars.push(avatar);
+        this.animationManager.addEntity(avatar);
         avatar.startAnimation('breathBack');
-        avatar.getElement().addEventListener('mousedown', (event) => {
-            avatar.startDrag(event);
-        });
+    }
+
+    /**
+     * Removes an avatar from the game.
+     * @param avatar - The avatar to remove.
+     */
+    public removeAvatar(avatar: Avatar): void {
+        const index = this.avatars.indexOf(avatar);
+        if (index > -1) {
+            this.avatars.splice(index, 1);
+            this.animationManager.removeEntity(avatar);
+            this.floor.removeAvatar(avatar);
+            if (this.selectedAvatar === avatar) {
+                this.selectedAvatar = null;
+            }
+        }
+    }
+
+    /**
+     * Removes all avatars from the game.
+     */
+    public clearAvatars(): void {
+        for (const avatar of this.avatars) {
+            this.animationManager.removeEntity(avatar);
+        }
+        this.avatars = [];
+        this.floor.clearFloor();
+        this.selectedAvatar = null;
     }
 }
