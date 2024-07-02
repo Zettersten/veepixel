@@ -7,6 +7,7 @@ import { AvatarOptions, AvatarSprites } from "./Types";
  * Represents the main game logic.
  */
 export class Game {
+    private debugMode: boolean = false;
     private readonly floor: Floor;
     private selectedAvatar: Avatar | null = null;
     private readonly animationManager: AnimationManager;
@@ -94,7 +95,7 @@ export class Game {
     private onFloorClick = (event: MouseEvent): void => {
         const clickedElement = event.target as HTMLElement;
         const clickedAvatar = this.avatars.find(avatar => avatar.getElement() === clickedElement);
-        
+
         if (clickedAvatar) {
             this.selectAvatar(clickedAvatar);
         } else if (this.selectedAvatar) {
@@ -104,8 +105,8 @@ export class Game {
     }
 
     /**
-     * Selects an avatar.
-     * @param avatar - The avatar to select.
+     * Selects an avatar or deselects if it's already selected.
+     * @param avatar - The avatar to select or deselect.
      */
     public selectAvatar(avatar: Avatar): void {
         if (this.selectedAvatar) {
@@ -130,6 +131,7 @@ export class Game {
         this.avatars.push(avatar);
         this.animationManager.addEntity(avatar);
         avatar.startAnimation('breathBack');
+        avatar.getElement().style.zIndex = this.avatars.length.toString();  // Set z-index based on order
     }
 
     /**
@@ -158,5 +160,15 @@ export class Game {
         this.avatars = [];
         this.floor.clearFloor();
         this.selectedAvatar = null;
+    }
+
+    public changeAvatarSprite(avatar: Avatar, newSpritePath: string): void {
+        avatar.updateSprite(newSpritePath);
+        avatar.calculateSpriteBoundingBox();
+    }
+
+    public toggleDebugMode(enable: boolean): void {
+        this.debugMode = enable;
+        this.avatars.forEach(avatar => avatar.toggleDebugBoundingBox(enable));
     }
 }

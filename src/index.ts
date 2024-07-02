@@ -15,12 +15,13 @@ function initializeGame(): void {
     const floor = new Floor();
     const game = new Game(floor, animationManager);
 
-    const avatarCount = 1;
+    const avatarCount = 5;
     for (let i = 0; i < avatarCount; i++) {
         const avatar = new AdaptableAlien();
         game.addAvatar(avatar.options, avatar.sprites);
     }
 
+    game.toggleDebugMode(false);
     game.start();
 }
 
