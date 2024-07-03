@@ -46,7 +46,7 @@ export class Avatar {
      */
     private drawDebugBoundingBox(): void {
         if (!this.spriteBoundingBox) return;
-    
+
         if (!this.debugElement) {
             this.debugElement = document.createElement('div');
             this.debugElement.style.position = 'absolute';
@@ -54,7 +54,7 @@ export class Avatar {
             this.debugElement.style.pointerEvents = 'none';
             this.element.appendChild(this.debugElement);
         }
-    
+
         const { x, y, width, height } = this.spriteBoundingBox;
         this.debugElement.style.left = `${x}px`;
         this.debugElement.style.top = `${y}px`;
@@ -84,16 +84,16 @@ export class Avatar {
             canvas.width = this.width;
             canvas.height = this.height;
             const ctx = canvas.getContext('2d')!;
-    
+
             // Draw only the first frame of the sprite
             ctx.drawImage(img, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
-    
+
             const imageData = ctx.getImageData(0, 0, this.width, this.height);
             const data = imageData.data;
-    
+
             let minX = this.width, minY = this.height, maxX = 0, maxY = 0;
             const alphaThreshold = 10; // Adjust this value to fine-tune detection
-    
+
             for (let y = 0; y < this.height; y++) {
                 for (let x = 0; x < this.width; x++) {
                     const alpha = data[(y * this.width + x) * 4 + 3];
@@ -105,7 +105,7 @@ export class Avatar {
                     }
                 }
             }
-    
+
             // Add a small padding to the bounding box
             const padding = 5;
             this.spriteBoundingBox = {
@@ -114,7 +114,7 @@ export class Avatar {
                 width: Math.min(this.width, maxX - minX + 1 + padding * 2),
                 height: Math.min(this.height, maxY - minY + 1 + padding * 2)
             };
-    
+
             this.floor.updateAvatarCollision(this);
             this.drawDebugBoundingBox();
         };

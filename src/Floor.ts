@@ -60,7 +60,7 @@ export class Floor {
         const rect = avatar.getCollisionRect();
         rect.x = x + (rect.x - avatar.getPosition().x);
         rect.y = y + (rect.y - avatar.getPosition().y);
-    
+
         return !this.avatars.some(existingAvatar => {
             if (existingAvatar === excludeAvatar) return false;
             const existingRect = existingAvatar.getCollisionRect();
