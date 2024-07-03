@@ -1,11 +1,9 @@
 /* Reset default styles and set base font properties */
 * {
-    padding: 0;
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-size: 14px;
-    line-height: 1.2;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font: 14px/1.2 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     border: none;
     outline: none;
     background: none;
@@ -13,8 +11,7 @@
 }
 
 /* Ensure full viewport coverage */
-body,
-html {
+body, html {
     width: 100%;
     height: 100%;
 }
@@ -28,22 +25,19 @@ body {
     overflow: hidden;
 }
 
-/* Style the main container div */
-#game,
-#mask {
+/* Style the main container div and mask */
+#game, #mask {
     max-width: 1920px;
     max-height: 1080px;
     width: 100%;
     height: 100%;
-    background: url(../assets/backgrounds/stadium.png) no-repeat center center;
-    background-size: cover;
+    background: url(../assets/backgrounds/stadium.png) no-repeat center/cover;
     image-rendering: pixelated;
     position: relative;
-    z-index: 0;
 }
 
 #mask {
-    background: url(../assets/backgrounds/stadium-mask.png) no-repeat center center;
+    background-image: url(../assets/backgrounds/stadium-mask.png);
     z-index: 1;
     pointer-events: none;
 }
@@ -68,13 +62,76 @@ body {
 .logo {
     display: block;
     height: 50px;
-    width: -moz-fit-content;
     width: fit-content;
     margin: 20px;
 }
 
 .music {
-    height: 28px;
-    width: 160px;
+    height: 36px;
+    width: 49px;
     margin: 20px;
+    background: #00c08b;
+    padding: 0 5px;
+    border: 3px solid black;
+    box-sizing: content-box;
+    box-shadow: -4px 4px 0 0 #007f6e;
+    display: flex;
+    align-items: center;    
+    justify-content: space-between;
+    gap: 3px;
+    transition: width 500ms ease;
+    overflow: hidden;
+}
+
+.music .music-player {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms ease;
+    width: 1px;
+}
+
+.music.playing {
+    width: 220px;
+}
+
+.music.playing .music-player {
+    opacity: 1;
+    width: 160px;
+    pointer-events: all;
+    transition-delay: 500ms;
+}
+
+.btn {
+    background: #009688;
+    border: 2px solid #267f6e;
+    padding: 3px;
+    cursor: pointer;
+    border-radius: 2px;
+    width: 23px;
+}
+
+.btn:hover {
+    opacity: .8;
+    filter: hue-rotate(185deg);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    opacity: 1;
+}
+
+.btn img {
+    display: block;
+    width: 100%;
+    max-width: 23px;
+}
+
+.btn img[alt="Play"],
+.btn img[alt="Pause"] {
+    display: none;
+}
+
+.btn.btn-play img[alt="Play"],
+.btn.btn-pause img[alt="Pause"] {
+    display: block;
 }

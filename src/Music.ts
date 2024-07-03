@@ -17,21 +17,23 @@ export class Music {
     ];
 
     private readonly audioPlayer: WaveSurfer;
+    private readonly audioPlayerElement: HTMLElement;
+
     private currentSongIndex: number = 0;
 
     constructor() {
         this.audioPlayer = WaveSurfer.create({
-            container: '.music',
-            height: 28,
+            container: '.music-player',
+            height: 18,
             width: 160,
             normalize: false,
-            waveColor: "#00db7c",
-            progressColor: "#ffffff",
-            cursorColor: "#ddd5e9",
-            cursorWidth: 5,
-            barWidth: 4,
-            barGap: 4,
-            barRadius: 13,
+            waveColor: "#fff",
+            progressColor: "#1d5048",
+            cursorColor: "#000",
+            cursorWidth: 2,
+            barWidth: 2,
+            barGap: 2,
+            barRadius: 0,
             barHeight: 1,
             minPxPerSec: 1,
             fillParent: true,
@@ -45,6 +47,7 @@ export class Music {
             autoCenter: true,
         });
 
+        this.audioPlayerElement = document.querySelector('.music')!;
         this.audioPlayer.setVolume(0.01);
         this.loadCurrentSong();
         this.setupEventListeners();
@@ -55,6 +58,44 @@ export class Music {
      */
     private setupEventListeners(): void {
         this.audioPlayer.on('finish', () => {
+            this.next();
+        });
+
+        const playPauseButton = document
+            .querySelector('#playPause')!;
+
+        const nextButton = document
+            .querySelector('#next')!;
+
+        this.audioPlayer.on('play', () => {
+            this.audioPlayerElement.classList.add('playing');
+            playPauseButton.classList.remove('btn-play');
+            playPauseButton.classList.add('btn-pause');
+        });
+
+        this.audioPlayer.on('pause', () => {
+            this.audioPlayerElement.classList.remove('playing');
+            playPauseButton.classList.add('btn-play');
+            playPauseButton.classList.remove('btn-pause');
+        });
+
+        if (this.audioPlayer.isPlaying()) {
+            playPauseButton?.classList.remove('btn-play');
+            playPauseButton?.classList.add('btn-pause');
+        } else {
+            playPauseButton?.classList.add('btn-play');
+            playPauseButton?.classList.remove('btn-pause');
+        }
+
+        playPauseButton.addEventListener('click', () => {
+            if (this.audioPlayer.isPlaying()) {
+                this.pause();
+            } else {
+                this.play();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
             this.next();
         });
     }
