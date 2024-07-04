@@ -353,7 +353,6 @@ export class Avatar {
         this.isSelected = selected;
         // this.element.style.filter = selected ? 'drop-shadow(2px 4px 6px yellow)' : 'none';
         this.element.style.filter = selected ? 'none' : 'none';
-        this.startAnimation(selected ? 'clapping' : (this.isHovering ? 'hovering' : 'breathBack'));
     }
 
     /**

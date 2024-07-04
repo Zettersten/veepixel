@@ -1,26 +1,29 @@
 import { Floor } from "./Floor";
 import { Avatar } from "./Avatar";
 import { AnimationManager } from "./AnimationManager";
-import { AvatarOptions, AvatarSprites } from "./Types";
+import { UserActionHandler } from "./UserActionHandler";
+import { AvatarOptions, AvatarSprites, UserAction } from "./Types";
+import { UserManager } from "./UserManager";
 
 /**
  * Represents the main game logic.
  */
 export class Game {
-    private debugMode: boolean = false;
     private readonly floor: Floor;
-    private selectedAvatar: Avatar | null = null;
     private readonly animationManager: AnimationManager;
+    private readonly userActionHandler: UserActionHandler;
+    private selectedAvatar: Avatar | null = null;
     private avatars: Avatar[] = [];
 
     /**
      * Creates a new Game instance.
      * @param floor - The floor on which the game takes place.
      */
-    constructor(floor: Floor, animationManager: AnimationManager) {
+    constructor(floor: Floor, animationManager: AnimationManager, userManager: UserManager) {
         this.floor = floor;
         this.animationManager = animationManager;
         this.setupEventListeners();
+        this.userActionHandler = new UserActionHandler(userManager);
     }
 
     /**
@@ -125,13 +128,14 @@ export class Game {
      * @param options - The options for creating the avatar.
      * @param sprites - The sprite data for the avatar.
      */
-    public addAvatar(options: AvatarOptions, sprites: AvatarSprites): void {
+    public addAvatar(options: AvatarOptions, sprites: AvatarSprites): Avatar {
         const avatar = new Avatar(this.floor, options, sprites);
         this.floor.placeAvatarRandomly(avatar);
         this.avatars.push(avatar);
         this.animationManager.addEntity(avatar);
         avatar.startAnimation('breathBack');
-        avatar.getElement().style.zIndex = this.avatars.length.toString();  // Set z-index based on order
+        avatar.getElement().style.zIndex = this.avatars.length.toString(); 
+        return avatar; // Set z-index based on order
     }
 
     /**
@@ -168,7 +172,10 @@ export class Game {
     }
 
     public toggleDebugMode(enable: boolean): void {
-        this.debugMode = enable;
         this.avatars.forEach(avatar => avatar.toggleDebugBoundingBox(enable));
+    }
+
+    public handleIncomingActions(actions: UserAction[]): void {
+        this.userActionHandler.handleBatchActions(actions);
     }
 }

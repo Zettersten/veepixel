@@ -4,6 +4,8 @@ export type AvatarSprite = {
     offsetY: number;
 };
 
+export type KeyBoardMoveType = 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'ArrowDown' | ' ';
+
 export type MovementDirectionType = 'left' | 'right' | 'up' | 'down' | null;
 
 export type AvatarSpriteType = 'breathBack' | 'breathFront' | 'clapping' | 'draggedDown' | 'draggedLeft' | 'draggedRight' | 'draggedUp' | 'handsUp' | 'hovering' | 'jumping' | 'swayBack' | 'swayFront' | 'turnAround' | 'talk' | 'blink' | 'walkLeft' | 'walkRight' | 'walkUp' | 'walkDown' | 'boo';
@@ -23,3 +25,14 @@ export type Rect = {
     width: number;
     height: number;
 };
+
+export type UserAction = {
+    userId: string;
+    action: 'move' | 'jump' | 'animate' | 'keyboardMove';
+    data: {
+        dx?: number;
+        dy?: number;
+        animationType?: AvatarSpriteType;
+        key?: KeyBoardMoveType;
+    };
+}

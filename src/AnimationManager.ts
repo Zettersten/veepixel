@@ -59,6 +59,7 @@ export class AnimationManager {
             this.lastUpdateTime = currentTime - (deltaTime % this.updateInterval);
         }
 
+        // document.dispatchEvent(new CustomEvent('animationFrame'));
         this.animationFrame = requestAnimationFrame(this.loop);
     }
 }
