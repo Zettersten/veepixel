@@ -1,29 +1,59 @@
 import WaveSurfer from 'wavesurfer.js'
+import { EventEmitter } from './EventEmitter';
+import { EventCallback, Song } from './Types';
 
-interface Song {
-    id: number;
-    name: string;
-    url: string;
-}
-
+/**
+ * Manages music playback and playlist functionality.
+ */
 export class Music {
-    private playlist: Song[] = [
-        { id: 1, name: "Bit Adventure", url: "../assets/music/song-bit-adventure.mp3" },
-        { id: 2, name: "Bit of Hope", url: "../assets/music/song-bit-of-hope.mp3" },
-        { id: 3, name: "Funny Bits", url: "../assets/music/song-funny-bits.mp3" },
-        { id: 4, name: "Nostalgia", url: "../assets/music/song-nostalgia.mp3" },
-        { id: 5, name: "Platformer", url: "../assets/music/song-platformer.mp3" },
-        { id: 6, name: "Retro Funk", url: "../assets/music/song-retro-funk.mp3" },
-    ];
-
+    private readonly playlist: Song[];
     private readonly audioPlayer: WaveSurfer;
-    private readonly audioPlayerElement: HTMLElement;
-
+    private readonly eventEmitter: EventEmitter;
+    private readonly parentElement: HTMLElement;
     private currentSongIndex: number = 0;
 
-    constructor() {
-        this.audioPlayer = WaveSurfer.create({
-            container: '.music-player',
+    /**
+     * Creates a new Music instance.
+     * @param containerSelector - The CSS selector for the audio player container.
+     */
+    constructor(containerSelector: string) {
+        this.parentElement = document.querySelector(containerSelector)!.parentElement as HTMLElement;
+        this.playlist = this.initializePlaylist();
+        this.audioPlayer = this.createAudioPlayer(containerSelector);
+        this.eventEmitter = new EventEmitter();
+        this.setupEventListeners();
+        this.setVolume(0.5);
+        this.next();
+    }
+
+    /**
+     * Initializes the playlist with default songs.
+     * @returns An array of Song objects.
+     */
+    private initializePlaylist(): Song[] {
+        return [
+            { id: 1, name: "Bit Adventure", url: "../assets/music/song-bit-adventure.mp3" },
+            { id: 2, name: "Bit of Hope", url: "../assets/music/song-bit-of-hope.mp3" },
+            { id: 3, name: "Funny Bits", url: "../assets/music/song-funny-bits.mp3" },
+            { id: 4, name: "Nostalgia", url: "../assets/music/song-nostalgia.mp3" },
+            { id: 5, name: "Platformer", url: "../assets/music/song-platformer.mp3" },
+            { id: 6, name: "Retro Funk", url: "../assets/music/song-retro-funk.mp3" },
+            { id: 7, name: "Sound Universe Studio", url: "../assets/music/song-8-bit-game-song.mp3" },
+            { id: 8, name: "MoodMode", url: "../assets/music/song-8-bit-arcade.mp3" },
+            { id: 9, name: "Nick Panek", url: "../assets/music/song-hardboss.mp3" },
+            { id: 10, name: "MoodMode", url: "../assets/music/song-8-bit-game.mp3" },
+            { id: 11, name: "Lesia Kower", url: "../assets/music/song-battle-time.mp3" }
+        ];
+    }
+
+    /**
+     * Creates and configures the WaveSurfer audio player.
+     * @param containerSelector - The CSS selector for the audio player container.
+     * @returns A configured WaveSurfer instance.
+     */
+    private createAudioPlayer(containerSelector: string): WaveSurfer {
+        return WaveSurfer.create({
+            container: containerSelector,
             height: 18,
             width: 160,
             normalize: false,
@@ -46,58 +76,35 @@ export class Music {
             autoScroll: true,
             autoCenter: true,
         });
-
-        this.audioPlayerElement = document.querySelector('.music')!;
-        this.audioPlayer.setVolume(0.01);
-        this.loadCurrentSong();
-        this.setupEventListeners();
     }
 
     /**
      * Sets up event listeners for the audio player.
      */
     private setupEventListeners(): void {
-        this.audioPlayer.on('finish', () => {
-            this.next();
-        });
 
-        const playPauseButton = document
-            .querySelector('#playPause')!;
-
-        const nextButton = document
-            .querySelector('#next')!;
+        this.audioPlayer.on('finish', () => this.next());
 
         this.audioPlayer.on('play', () => {
-            this.audioPlayerElement.classList.add('playing');
-            playPauseButton.classList.remove('btn-play');
-            playPauseButton.classList.add('btn-pause');
+            this.parentElement.classList.add('playing');
+            this.eventEmitter.emit('play');
         });
 
         this.audioPlayer.on('pause', () => {
-            this.audioPlayerElement.classList.remove('playing');
-            playPauseButton.classList.add('btn-play');
-            playPauseButton.classList.remove('btn-pause');
+            this.parentElement.classList.remove('playing');
+            this.eventEmitter.emit('pause');
         });
 
-        if (this.audioPlayer.isPlaying()) {
-            playPauseButton?.classList.remove('btn-play');
-            playPauseButton?.classList.add('btn-pause');
-        } else {
-            playPauseButton?.classList.add('btn-play');
-            playPauseButton?.classList.remove('btn-pause');
+        const playPauseButton = document.querySelector('#playPause');
+        const nextButton = document.querySelector('#next');
+
+        if (playPauseButton) {
+            playPauseButton.addEventListener('click', () => this.togglePlayPause());
         }
 
-        playPauseButton.addEventListener('click', () => {
-            if (this.audioPlayer.isPlaying()) {
-                this.pause();
-            } else {
-                this.play();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            this.next();
-        });
+        if (nextButton) {
+            nextButton.addEventListener('click', () => this.next());
+        }
     }
 
     /**
@@ -105,6 +112,7 @@ export class Music {
      */
     private loadCurrentSong(): void {
         this.audioPlayer.load(this.playlist[this.currentSongIndex].url);
+        this.eventEmitter.emit('songLoaded', this.getCurrentSong());
     }
 
     /**
@@ -122,10 +130,22 @@ export class Music {
     }
 
     /**
+     * Toggles between play and pause states.
+     */
+    public togglePlayPause(): void {
+        if (this.audioPlayer.isPlaying()) {
+            this.pause();
+        } else {
+            this.play();
+        }
+    }
+
+    /**
      * Stops the music and sets the position back to start.
      */
     public stop(): void {
         this.audioPlayer.stop();
+        this.eventEmitter.emit('stop');
     }
 
     /**
@@ -155,6 +175,7 @@ export class Music {
             throw new Error("Volume must be between 0 and 100");
         }
         this.audioPlayer.setVolume(volume / 100);
+        this.eventEmitter.emit('volumeChanged', volume);
     }
 
     /**
@@ -165,6 +186,7 @@ export class Music {
     public addNewSong(name: string, url: string): void {
         const newId = Math.max(...this.playlist.map(song => song.id)) + 1;
         this.playlist.push({ id: newId, name, url });
+        this.eventEmitter.emit('songAdded', { id: newId, name, url });
     }
 
     /**
@@ -184,7 +206,7 @@ export class Music {
      * @returns The current song object.
      */
     public getCurrentSong(): Song {
-        return this.playlist[this.currentSongIndex];
+        return { ...this.playlist[this.currentSongIndex] };
     }
 
     /**
@@ -193,5 +215,14 @@ export class Music {
      */
     public getPlaylist(): Song[] {
         return [...this.playlist];
+    }
+
+    /**
+     * Register a callback function to be executed when a specific event occurs.
+     * @param eventName - The name of the event to listen for.
+     * @param callback - The callback function to be executed when the event occurs.
+     */
+    public on(eventName: string, callback: EventCallback): void {
+        this.eventEmitter.on(eventName, callback);
     }
 }

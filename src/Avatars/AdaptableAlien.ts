@@ -1,7 +1,7 @@
 import json from "../../build/sprites/adaptable-alien.json";
-import { AvatarOptions, AvatarSprites } from "../Types";
+import { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types";
 
-export class AdaptableAlien {
+export class AdaptableAlien implements AvatarFactory {
 
     get options(): AvatarOptions {
         return {

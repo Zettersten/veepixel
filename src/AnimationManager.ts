@@ -1,65 +1,116 @@
-import { Avatar } from './Avatar';
+import { EventEmitter } from './EventEmitter';
+import { EventCallback, Animatable } from './Types';
 
 /**
  * Manages the global animation loop for all game entities.
  */
 export class AnimationManager {
-    private entities: Avatar[] = [];
+    private entities: Set<Animatable> = new Set();
     private animationFrame: number | null = null;
     private lastUpdateTime: number = 0;
     private readonly updateInterval: number = 100; // 100ms, mimicking the original setInterval
+    private readonly eventEmitter: EventEmitter;
+
+    constructor() {
+        this.eventEmitter = new EventEmitter();
+    }
 
     /**
      * Adds an entity to be managed by the animation loop.
-     * @param entity - The entity (Avatar) to add.
+     * @param entity - The entity to add.
      */
-    addEntity(entity: Avatar): void {
-        this.entities.push(entity);
+    public addEntity(entity: Animatable): void {
+        this.entities.add(entity);
+        this.eventEmitter.emit('entityAdded', entity);
     }
 
     /**
      * Removes an entity from the animation loop.
-     * @param entity - The entity (Avatar) to remove.
+     * @param entity - The entity to remove.
      */
-    removeEntity(entity: Avatar): void {
-        const index = this.entities.indexOf(entity);
-        if (index > -1) {
-            this.entities.splice(index, 1);
+    public removeEntity(entity: Animatable): void {
+        if (this.entities.delete(entity)) {
+            this.eventEmitter.emit('entityRemoved', entity);
         }
+    }
+
+    /**
+     * Removes all entities from the animation loop.
+     */
+    public clearEntities(): void {
+        this.entities.clear();
+        this.eventEmitter.emit('entitiesCleared');
     }
 
     /**
      * Starts the animation loop.
      */
-    start(): void {
+    public start(): void {
         if (this.animationFrame === null) {
             this.lastUpdateTime = performance.now();
             this.loop();
+            this.eventEmitter.emit('animationStarted');
         }
     }
 
     /**
      * Stops the animation loop.
      */
-    stop(): void {
+    public stop(): void {
         if (this.animationFrame !== null) {
             cancelAnimationFrame(this.animationFrame);
             this.animationFrame = null;
+            this.eventEmitter.emit('animationStopped');
         }
     }
 
+    /**
+     * The main animation loop.
+     */
     private loop = (): void => {
         const currentTime = performance.now();
         const deltaTime = currentTime - this.lastUpdateTime;
 
         if (deltaTime >= this.updateInterval) {
-            for (const entity of this.entities) {
-                entity.update();
-            }
+            this.updateEntities();
             this.lastUpdateTime = currentTime - (deltaTime % this.updateInterval);
         }
 
-        // document.dispatchEvent(new CustomEvent('animationFrame'));
         this.animationFrame = requestAnimationFrame(this.loop);
+    }
+
+    /**
+     * Updates all entities in the animation loop.
+     */
+    private updateEntities(): void {
+        for (const entity of this.entities) {
+            entity.update();
+        }
+        this.eventEmitter.emit('entitiesUpdated');
+    }
+
+    /**
+     * Registers an event listener for animation events.
+     * @param eventName - The name of the event to listen for.
+     * @param callback - The function to call when the event occurs.
+     */
+    public on(eventName: string, callback: EventCallback): void {
+        this.eventEmitter.on(eventName, callback);
+    }
+
+    /**
+     * Gets the current update interval.
+     * @returns The current update interval in milliseconds.
+     */
+    public getUpdateInterval(): number {
+        return this.updateInterval;
+    }
+
+    /**
+     * Gets the number of entities currently being managed.
+     * @returns The number of entities.
+     */
+    public getEntityCount(): number {
+        return this.entities.size;
     }
 }

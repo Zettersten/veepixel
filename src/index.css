@@ -1,13 +1,139 @@
-/* Reset default styles and set base font properties */
-* {
+/* CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font: 14px/1.2 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    border: none;
-    outline: none;
-    background: none;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
     list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Additional reset for common elements */
+input, button, textarea, select {
+    font: inherit;
+}
+
+textarea {
+    resize: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* Font Faces */
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('../assets/fonts/Silkscreen.woff2') format('woff2'),
+        url('../assets/fonts/Silkscreen.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Silkscreen';
+    src: url('../assets/fonts/Silkscreen-Bold.woff2') format('woff2'),
+        url('../assets/fonts/Silkscreen-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Silkscreen Expanded';
+    src: url('../assets/fonts/Silkscreen-Expanded.woff2') format('woff2'),
+        url('../assets/fonts/Silkscreen-Expanded.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Silkscreen Expanded';
+    src: url('../assets/fonts/Silkscreen-ExpandedBold.woff2') format('woff2'),
+        url('../assets/fonts/Silkscreen-ExpandedBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: block;
+}
+
+/* CSS Font Stack */
+body {
+    font: 14px/1.2 'Silkscreen', 'Silkscreen Expanded', Arial, sans-serif;
+}
+
+/* Example Selectors */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Silkscreen', Arial, sans-serif;
+    font-weight: bold;
+}
+
+p, span, a, li, td, th {
+    font-family: 'Silkscreen Expanded', Arial, sans-serif;
+    font-weight: normal;
+}
+
+strong, b {
+    font-family: 'Silkscreen Expanded', Arial, sans-serif;
+    font-weight: bold;
 }
 
 /* Ensure full viewport coverage */
@@ -64,6 +190,11 @@ body {
     height: 50px;
     width: fit-content;
     margin: 20px;
+}
+
+.logo img {
+    width: 119px;
+    height: 50px;
 }
 
 .music {
@@ -126,12 +257,35 @@ body {
     max-width: 23px;
 }
 
-.btn img[alt="Play"],
-.btn img[alt="Pause"] {
+.music .btn img[alt="Pause"] {
     display: none;
 }
 
-.btn.btn-play img[alt="Play"],
-.btn.btn-pause img[alt="Pause"] {
+.music.playing .btn img[alt="Play"] {
+    display: none;
+}
+
+.music.playing .btn img[alt="Pause"] {
     display: block;
+}
+
+
+#controls {
+
+    --width: 960px;
+
+    position: fixed;
+    left: 50%;
+    height: 50px;
+    z-index: 1;
+    bottom: 8px;
+    width: var(--width);
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    background-color: #00c08b;
+    margin-left: calc(var(--width) / -2);
+    border: 3px solid black;
+    box-sizing: content-box;
+    box-shadow: -4px 4px 0 0 #007f6e;
 }
