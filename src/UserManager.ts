@@ -76,24 +76,11 @@ export class UserManager {
      * @param avatarSprites - The sprites for the user's avatar.
      * @returns The newly created User instance.
      */
-    public createUser(userId: string, username: string, imageUrl: string, avatarOptions: AvatarOptions, avatarSprites: AvatarSprites): User {
-        const avatar = this.createAvatar(avatarOptions, avatarSprites);
+    public async createUser(userId: string, username: string, imageUrl: string, avatarOptions: AvatarOptions, avatarSprites: AvatarSprites): Promise<User> {
+        const avatar = await this.createAvatar(avatarOptions, avatarSprites);
         const user = new User(userId, username, imageUrl, avatar);
         this.addUser(user);
         return user;
-    }
-
-    /**
-     * Creates a new avatar with the specified options and sprites, places it randomly on the floor, and emits an event.
-     * @param options - The options for the avatar.
-     * @param sprites - The sprites for the avatar.
-     * @returns The newly created avatar.
-     */
-    public createAvatar(options: AvatarOptions, sprites: AvatarSprites): Avatar {
-        const avatar = new Avatar(this.floor, options, sprites);
-        this.floor.placeAvatarRandomly(avatar);
-        this.eventEmitter.emit('avatarCreated', avatar);
-        return avatar;
     }
 
     /**
@@ -157,6 +144,7 @@ export class UserManager {
      * @param enable - Whether to enable or disable debug mode.
      */
     public toggleDebugMode(enable: boolean): void {
+        console.log(this.users);
         for (const user of this.users.values()) {
             user.avatar.toggleDebugBoundingBox(enable);
         }
@@ -170,5 +158,13 @@ export class UserManager {
      */
     public on(eventName: string, callback: EventCallback): void {
         this.eventEmitter.on(eventName, callback);
+    }
+    
+    private async createAvatar(options: AvatarOptions, sprites: AvatarSprites): Promise<Avatar> {
+        const avatar = new Avatar(this.floor, options, sprites);
+        await avatar.recalculateBoundingBox();
+        this.floor.placeAvatarRandomly(avatar);
+        this.eventEmitter.emit('avatarCreated', avatar);
+        return avatar;
     }
 }

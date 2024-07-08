@@ -11,10 +11,13 @@ export class Avatar {
     private readonly spriteManager: SpriteManager;
     private readonly element: HTMLDivElement;
     private position: { x: number, y: number } = { x: 0, y: 0 };
+    private originalPosition: { x: number, y: number } | null = null;
     private currentMovementDirection: MovementDirectionType = null;
     private isDragging: boolean = false;
     private isHovering: boolean = false;
     private isSelected: boolean = false;
+    private dragOffset: { x: number, y: number } | null = null;
+    private readonly dragThreshold: number = 1;
 
     /**
      * Creates a new Avatar instance.
@@ -38,17 +41,11 @@ export class Avatar {
      */
     private createAvatarElement(): HTMLDivElement {
         const element = document.createElement('div');
+        element.classList.add('avatar');
         element.style.cssText = `
             width: ${this.spriteManager.width}px;
             height: ${this.spriteManager.height}px;
             background-image: url(${this.options.path});
-            background-repeat: no-repeat;
-            background-position: 0px 0px;
-            position: absolute;
-            transform: translate3d(0px, 0px, 0);
-            transform-origin: left top;
-            will-change: transform;
-            cursor: pointer;
         `;
         return element;
     }
@@ -89,18 +86,18 @@ export class Avatar {
     public move(dx: number, dy: number): void {
         const newX = this.position.x + dx;
         const newY = this.position.y + dy;
-
-        const constrained = this.isDragging
-            ? this.floor.constrainPosition(newX, newY)
-            : this.floor.constrainPositionWithCollision(this, newX, newY);
-
-        this.setPosition(constrained.x, constrained.y);
-
-        this.currentMovementDirection =
-            Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') :
-            dy !== 0 ? (dy > 0 ? 'down' : 'up') : null;
-
-        this.startAnimation(this.currentMovementDirection === 'down' ? 'swayFront' : 'swayBack');
+    
+        const constrained = this.floor.constrainPositionWithCollision(this, newX, newY);
+    
+        if (constrained.x !== this.position.x || constrained.y !== this.position.y) {
+            this.setPosition(constrained.x, constrained.y);
+    
+            this.currentMovementDirection =
+                Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') :
+                dy !== 0 ? (dy > 0 ? 'down' : 'up') : null;
+    
+            this.startAnimation(this.currentMovementDirection === 'down' ? 'swayFront' : 'swayBack');
+        }
     }
 
     /**
@@ -108,6 +105,7 @@ export class Avatar {
      * @param spriteType - The type of sprite animation to start.
      */
     public startAnimation(spriteType: AvatarSpriteType): void {
+        console.log(spriteType);
         this.spriteManager.startAnimation(spriteType);
         this.eventEmitter.emit('animationStarted', spriteType);
     }
@@ -135,17 +133,48 @@ export class Avatar {
     private startDrag = (event: MouseEvent): void => {
         this.isDragging = true;
         this.isHovering = false;
-        this.eventEmitter.emit('dragStarted', event);
+    
+        const rect = this.floor.getElement().getBoundingClientRect();
+        this.dragOffset = {
+            x: event.clientX - rect.left - this.position.x,
+            y: event.clientY - rect.top - this.position.y
+        };
+    
+        this.originalPosition = { ...this.position };
+    
         document.addEventListener('mousemove', this.onDrag);
         document.addEventListener('mouseup', this.stopDrag);
+    
+        this.eventEmitter.emit('dragStarted', event);
     }
 
     /**
      * Handles the drag event.
      */
     private onDrag = (event: MouseEvent): void => {
-        if (!this.isDragging) return;
-        this.eventEmitter.emit('dragging', event);
+        if (!this.isDragging || !this.dragOffset) return;
+    
+        const rect = this.floor.getElement().getBoundingClientRect();
+        const newX = event.clientX - rect.left - this.dragOffset.x;
+        const newY = event.clientY - rect.top - this.dragOffset.y;
+    
+        const previousPosition = { ...this.position };
+        const constrained = this.floor.constrainPosition(newX, newY, this.getWidth(), this.getHeight());
+        
+        this.setPosition(constrained.x, constrained.y);
+    
+        const dx = constrained.x - previousPosition.x;
+        const dy = constrained.y - previousPosition.y;
+    
+        if (Math.abs(dx) > this.dragThreshold || Math.abs(dy) > this.dragThreshold) {
+            const animationType = 
+                Math.abs(dx) > Math.abs(dy)
+                    ? (dx > 0 ? 'draggedRight' : 'draggedLeft')
+                    : (dy > 0 ? 'draggedDown' : 'draggedUp');
+            this.startAnimation(animationType);
+        }
+    
+        this.eventEmitter.emit('dragging', { x: constrained.x, y: constrained.y });
     }
 
     /**
@@ -153,10 +182,20 @@ export class Avatar {
      */
     private stopDrag = (): void => {
         this.isDragging = false;
+    
         document.removeEventListener('mousemove', this.onDrag);
         document.removeEventListener('mouseup', this.stopDrag);
+    
+        if (this.originalPosition) {
+            if (!this.floor.isPositionFree(this.position.x, this.position.y, this)) {
+                // Move back to original position if dropped on another avatar
+                this.setPosition(this.originalPosition.x, this.originalPosition.y);
+            }
+            this.originalPosition = null;
+        }
+    
         this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
-        this.eventEmitter.emit('dragStopped');
+        this.eventEmitter.emit('dragStopped', this.position);
     }
 
     /**
@@ -211,14 +250,20 @@ export class Avatar {
         this.startAnimation('jumping');
     }
 
+    public getWidth(): number {
+        return this.spriteManager.width;
+    }
+    
+    public getHeight(): number {
+        return this.spriteManager.height;
+    }
+
     /**
      * Updates the avatar's sprite with a new image path.
      * @param newPath - The new image path for the avatar's sprite.
      */
-    public updateSprite(newPath: string): void {
-        this.options.path = newPath;
-        this.element.style.backgroundImage = `url(${newPath})`;
-        this.spriteManager.recalculateBoundingBox(newPath);
+    public async recalculateBoundingBox(): Promise<void> {
+        await this.spriteManager.recalculateBoundingBox(this.options.path);
     }
 
     /**
@@ -226,7 +271,13 @@ export class Avatar {
      * @returns The collision rectangle.
      */
     public getCollisionRect(): Rect {
-        return this.spriteManager.getCollisionRect(this.position);
+        const boundingBox = this.spriteManager.getBoundingBox();
+        return {
+            x: this.position.x + boundingBox.x,
+            y: this.position.y + boundingBox.y,
+            width: boundingBox.width,
+            height: boundingBox.height
+        };
     }
 
     /**

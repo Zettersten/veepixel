@@ -272,7 +272,7 @@ body {
 
 #controls {
 
-    --width: 960px;
+    --width: 480px;
 
     position: fixed;
     left: 50%;
@@ -288,4 +288,15 @@ body {
     border: 3px solid black;
     box-sizing: content-box;
     box-shadow: -4px 4px 0 0 #007f6e;
+}
+
+.avatar {
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    position: absolute;
+    transform: translate3d(0px, 0px, 0);
+    transform-origin: left top;
+    will-change: transform;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 0px 0 yellow, inset -2px -2px 0px 0 yellow;
 }

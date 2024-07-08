@@ -114,3 +114,8 @@ export type Song = {
 export type EventCallback = (...args: any[]) => void;
 
 
+/**
+ * Represents the type of avatar.
+ * @typedef {'ReflectiveRhino' | 'GaryBee' | 'AdaptableAlien'} AvatarType
+ */
+export type AvatarType = 'ReflectiveRhino' | 'GaryBee' |  'AdaptableAlien';

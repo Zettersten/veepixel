@@ -54,6 +54,8 @@ export class UserActionHandler {
      * @param key - The key that triggered the action.
      * @param isKeyDown - Indicates whether the key is pressed down or released.
      */
+    // In UserActionHandler.ts
+
     public handleKeyboardAction(avatar: Avatar, key: string, isKeyDown: boolean): void {
         if (!avatar) return;
 

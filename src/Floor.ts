@@ -72,18 +72,31 @@ export class Floor {
      * @param avatar - The avatar to check for (excluded from collision checks).
      * @returns True if the position is free, false otherwise.
      */
-    public isPositionFree(x: number, y: number, avatar: Avatar): boolean {
-        const rect = avatar.getCollisionRect();
-        rect.x = x;
-        rect.y = y;
+    public isPositionFree(x: number, y: number, excludeAvatar?: Avatar): boolean {
 
-        return !this.avatars.some(existingAvatar => {
-            if (existingAvatar === avatar) return false;
-            return this.collisionDetector.isColliding(rect, existingAvatar.getCollisionRect());
+        let width = 0;
+        let height = 0;
+
+        if (excludeAvatar) {
+            const collision = excludeAvatar.getCollisionRect();
+            width = collision.width;
+            height = collision.height;
+        }
+
+        const rect = {
+            x,
+            y,
+            width: width,
+            height: height
+        };
+
+        return !this.avatars.some(avatar => {
+            if (avatar === excludeAvatar) return false;
+            return this.collisionDetector.isColliding(rect, avatar.getCollisionRect());
         });
     }
 
-    /**
+    /** 
      * Gets the floor's DOM element.
      * @returns The floor's HTMLElement.
      */
@@ -112,7 +125,7 @@ export class Floor {
     private adjustAvatarPositions(): void {
         this.avatars.forEach(avatar => {
             const position = avatar.getPosition();
-            const constrained = this.constrainPosition(position.x, position.y);
+            const constrained = this.constrainPosition(position.x, position.y, avatar.getWidth(), avatar.getHeight());
             avatar.setPosition(constrained.x, constrained.y);
         });
         this.eventEmitter.emit('avatarsAdjusted');
@@ -146,15 +159,13 @@ export class Floor {
      * @param y - The y coordinate to constrain.
      * @returns The constrained x and y coordinates.
      */
-    public constrainPosition(x: number, y: number): { x: number, y: number } {
+    public constrainPosition(x: number, y: number, width: number, height: number): { x: number, y: number } {
         const floorWidth = this.element.clientWidth;
         const floorHeight = this.element.clientHeight;
-        const avatarWidth = 192;  // Consider making this dynamic or a parameter
-        const avatarHeight = 192;
-
+    
         return {
-            x: Math.max(0, Math.min(x, floorWidth - avatarWidth)),
-            y: Math.max(0, Math.min(y, floorHeight - avatarHeight / 1.3))
+            x: Math.max(0, Math.min(x, floorWidth - width)),
+            y: Math.max(0, Math.min(y, floorHeight - height))
         };
     }
 
@@ -166,13 +177,22 @@ export class Floor {
      * @returns The constrained position.
      */
     public constrainPositionWithCollision(avatar: Avatar, x: number, y: number): { x: number, y: number } {
-        const constrained = this.constrainPosition(x, y);
-
-        if (this.isPositionFree(constrained.x, constrained.y, avatar)) {
-            return constrained;
+        const constrained = this.constrainPosition(x, y, avatar.getWidth(), avatar.getHeight());
+    
+        const avatarRect = avatar.getCollisionRect();
+        avatarRect.x = constrained.x;
+        avatarRect.y = constrained.y;
+    
+        for (const otherAvatar of this.avatars) {
+            if (otherAvatar !== avatar) {
+                const otherRect = otherAvatar.getCollisionRect();
+                if (this.collisionDetector.isColliding(avatarRect, otherRect)) {
+                    return avatar.getPosition();
+                }
+            }
         }
-
-        return avatar.getPosition();  // Return current position if collision detected
+    
+        return constrained;
     }
 
     /**

@@ -4,6 +4,8 @@ import { AvatarSprite, AvatarSpriteType, AvatarSprites, Rect, Position } from ".
  * Manages sprite animations and collision detection for avatars.
  */
 export class SpriteManager {
+
+    private boundingBox: Rect | null = null;
     private currentSpriteType: AvatarSpriteType | null = null;
     private currentSpriteIndex: number = 0;
     private spriteBoundingBox: Rect | null = null;
@@ -48,43 +50,50 @@ export class SpriteManager {
      * Recalculates the bounding box of the sprite based on non-transparent pixels.
      * @param imagePath - The path to the sprite image.
      */
-    public recalculateBoundingBox(imagePath: string): void {
-        const img = new Image();
-        img.src = imagePath;
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = this.width;
-            canvas.height = this.height;
-            const ctx = canvas.getContext('2d')!;
-
-            ctx.drawImage(img, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
-
-            const imageData = ctx.getImageData(0, 0, this.width, this.height);
-            const data = imageData.data;
-
-            let minX = this.width, minY = this.height, maxX = 0, maxY = 0;
-            const alphaThreshold = 10;
-
-            for (let y = 0; y < this.height; y++) {
-                for (let x = 0; x < this.width; x++) {
-                    const alpha = data[(y * this.width + x) * 4 + 3];
-                    if (alpha > alphaThreshold) {
-                        minX = Math.min(minX, x);
-                        minY = Math.min(minY, y);
-                        maxX = Math.max(maxX, x);
-                        maxY = Math.max(maxY, y);
+    public async recalculateBoundingBox(imagePath: string): Promise<void> {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = imagePath;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = this.width;
+                canvas.height = this.height;
+                const ctx = canvas.getContext('2d')!;
+    
+                ctx.drawImage(img, 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+    
+                const imageData = ctx.getImageData(0, 0, this.width, this.height);
+                const data = imageData.data;
+    
+                let minX = this.width, minY = this.height, maxX = 0, maxY = 0;
+                const alphaThreshold = 10;
+    
+                for (let y = 0; y < this.height; y++) {
+                    for (let x = 0; x < this.width; x++) {
+                        const alpha = data[(y * this.width + x) * 4 + 3];
+                        if (alpha > alphaThreshold) {
+                            minX = Math.min(minX, x);
+                            minY = Math.min(minY, y);
+                            maxX = Math.max(maxX, x);
+                            maxY = Math.max(maxY, y);
+                        }
                     }
                 }
-            }
-
-            const padding = 5;
-            this.spriteBoundingBox = {
-                x: Math.max(0, minX - padding),
-                y: Math.max(0, minY - padding),
-                width: Math.min(this.width, maxX - minX + 1 + padding * 2),
-                height: Math.min(this.height, maxY - minY + 1 + padding * 2)
+    
+                const padding = 5;
+                this.boundingBox = {
+                    x: Math.max(0, minX - padding),
+                    y: Math.max(0, minY - padding),
+                    width: Math.min(this.width, maxX - minX + 1 + padding * 2),
+                    height: Math.min(this.height, maxY - minY + 1 + padding * 2)
+                };
+                resolve();
             };
-        };
+        });
+    }
+    
+    public getBoundingBox(): Rect {
+        return this.boundingBox || { x: 0, y: 0, width: this.width, height: this.height };
     }
 
     /**
@@ -95,8 +104,8 @@ export class SpriteManager {
     public getCollisionRect(position: Position): Rect {
         if (this.spriteBoundingBox) {
             return {
-                x: position.x + this.spriteBoundingBox.x,
-                y: position.y + this.spriteBoundingBox.y,
+                x: this.spriteBoundingBox.x,
+                y: this.spriteBoundingBox.y,
                 width: this.spriteBoundingBox.width,
                 height: this.spriteBoundingBox.height
             };
@@ -116,7 +125,6 @@ export class SpriteManager {
      * @param parentElement - The parent element to append the debug box to.
      */
     public toggleDebugBoundingBox(show: boolean, parentElement: HTMLElement): void {
-        console.log('toggleDebugBoundingBox', show, parentElement, this.debugElement);
         if (show) {
             if (!this.debugElement) {
                 this.debugElement = document.createElement('div');

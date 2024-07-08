@@ -23,7 +23,7 @@ export class Music {
         this.eventEmitter = new EventEmitter();
         this.setupEventListeners();
         this.setVolume(0.5);
-        this.next();
+        //this.next();
     }
 
     /**
@@ -68,7 +68,7 @@ export class Music {
             minPxPerSec: 1,
             fillParent: true,
             mediaControls: false,
-            autoplay: true,
+            autoplay: false,
             interact: true,
             dragToSeek: false,
             hideScrollbar: true,

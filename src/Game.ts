@@ -2,11 +2,13 @@ import { Floor } from "./Floor";
 import { Avatar } from "./Avatar";
 import { AnimationManager } from "./AnimationManager";
 import { UserActionHandler } from "./UserActionHandler";
-import { AvatarFactory, AvatarOptions, AvatarSprites, EventCallback, UserAction } from "./Types";
+import { AvatarFactory, AvatarOptions, AvatarSprites, AvatarType, EventCallback, UserAction } from "./Types";
 import { UserManager } from "./UserManager";
 import { EventEmitter } from "./EventEmitter";
 import { AdaptableAlien } from "./Avatars/AdaptableAlien";
 import { User } from "./User";
+import { ReflectiveRhino } from "./Avatars/ReflectiveRhino";
+import { GaryBee } from "./Avatars/GaryBee";
 
 /**
  * Represents the main game logic and orchestrates game components.
@@ -111,42 +113,36 @@ export class Game {
         }
     }
 
-    /**
-     * Adds an avatar to the game.
-     * @param options - The options for creating the avatar.
-     * @param sprites - The sprite data for the avatar.
-     * @returns The newly created Avatar instance.
-     */
-    public addAvatar(options: AvatarOptions, sprites: AvatarSprites): Avatar {
-        const avatar = this.userManager.createAvatar(options, sprites);
-        this.animationManager.addEntity(avatar);
-        avatar.startAnimation('breathBack');
-        this.eventEmitter.emit('avatarAdded', avatar);
-        return avatar;
-    }
-
-    public addUser(username: string, avatarType: string): User {
+    public async addUser(username: string, avatarType: AvatarType): Promise<User> {
         const { options, sprites } = this.getAvatarFactory(avatarType);
-        
-        const user = this.userManager.createUser(
+
+        const user = await this.userManager.createUser(
             `user-${this.userManager.getUserCount()}`,
             username,
             `https://randomuser.me/api/portraits/lego/${this.userManager.getUserCount() % 10}.jpg`,
             options,
             sprites
         );
-        
+
         this.floor.placeAvatarRandomly(user.avatar);
         this.animationManager.addEntity(user.avatar);
         user.avatar.startAnimation('breathBack');
-        
+
         return user;
     }
 
-    private getAvatarFactory(avatarType: string): AvatarFactory {
-        // This method would return the appropriate avatar factory based on the type
-        // For now, let's assume we only have AdaptableAlien
-        return new AdaptableAlien();
+    private getAvatarFactory(avatarType: AvatarType): AvatarFactory {
+
+        switch (avatarType) {
+            case 'ReflectiveRhino':
+                return new ReflectiveRhino();
+            case 'GaryBee':
+                return new GaryBee();
+            case 'AdaptableAlien':
+                return new AdaptableAlien();
+            default:
+                return new AdaptableAlien();
+        }
     }
 
     /**
@@ -172,16 +168,6 @@ export class Game {
         this.floor.clearAvatars();
         this.deselectAvatar();
         this.eventEmitter.emit('allAvatarsRemoved');
-    }
-
-    /**
-     * Changes the sprite of an avatar.
-     * @param avatar - The avatar to update.
-     * @param newSpritePath - The path to the new sprite.
-     */
-    public changeAvatarSprite(avatar: Avatar, newSpritePath: string): void {
-        avatar.updateSprite(newSpritePath);
-        this.eventEmitter.emit('avatarSpriteChanged', avatar);
     }
 
     /**

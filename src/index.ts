@@ -6,13 +6,13 @@ import { Music } from "./Music";
 import { AnimationManager } from "./AnimationManager";
 import { UserManager } from "./UserManager";
 import { UserActionHandler } from "./UserActionHandler";
-import { EventEmitter } from "./EventEmitter";
+import { Avatar } from "./Avatar";
+import { AvatarType } from "./Types";
 
 /**
  * Initializes and starts the game.
  */
-function initializeGame(): void {
-    const eventEmitter = new EventEmitter();
+async function initializeGame(): Promise<void> {
     const floorElement = document.getElementById("floor");
 
     if (!floorElement) {
@@ -28,12 +28,14 @@ function initializeGame(): void {
 
     const avatarCount = 5;
     for (let i = 0; i < avatarCount; i++) {
-        setTimeout(() => {
-            game.addUser(`User ${i}`, 'AdaptableAlien');
-        }, 1000 * i);
+
+        const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhino', 'GaryBee'];
+        const randomAvatarType = allAvatarTypes[Math.floor(Math.random() * allAvatarTypes.length)];
+
+        await game.addUser(`User ${i}`, randomAvatarType);
     }
 
-    game.toggleDebugMode(false);
+    console.log('Game initialized');
 
     // Set up event listeners
     game.on('gameStarted', () => console.log('Game started'));
@@ -45,6 +47,7 @@ function initializeGame(): void {
     music.on('pause', () => console.log('Music paused'));
 
     game.start();
+    game.toggleDebugMode(true);
 
     // Make game globally accessible for debugging
     (window as any).game = game;

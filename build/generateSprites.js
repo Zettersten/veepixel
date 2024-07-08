@@ -2,7 +2,9 @@ const { generateSprite } = require('@unvt/sprite-one');
 const fs = require('fs');
 
 const avatars = [
-  'adaptable-alien'
+  'adaptable-alien',
+  'gary-bee',
+  'reflective-rhinoceros'
 ];
 
 (async function () {
@@ -125,6 +127,22 @@ function transformKeyToAnimationName(key) {
 
   if (key.startsWith('boo-')) {
     return [indexInKey, 'boo'];
+  }
+
+  if (key.startsWith('walk-down-')) {
+    return [indexInKey, 'walkDown'];
+  }
+
+  if (key.startsWith('walk-up-')) {
+    return [indexInKey, 'walkUp'];
+  }
+
+  if (key.startsWith('walk-left-')) {
+    return [indexInKey, 'walkLeft'];
+  }
+
+  if (key.startsWith('walk-right-')) {
+    return [indexInKey, 'walkRight'];
   }
 
   throw new Error(`Unknown key: ${key}`);
