@@ -7,10 +7,17 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@types/draggabilly':
+        specifier: ^2.1.6
+        version: 2.1.6
     devDependencies:
       '@unvt/sprite-one':
         specifier: ^0.1.1
         version: 0.1.1
+      draggabilly:
+        specifier: ^3.0.0
+        version: 3.0.0
       tsup:
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.5.3)
@@ -395,6 +402,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@types/draggabilly@2.1.6':
+    resolution: {integrity: sha512-vAt9W31Upd0kkBQvlVL+KP2dd1lkfd7MVHsmyjU/EVwfetvEFgFU2+dpndRzwr0lTniFH+cDZbMPnjOT/tweRw==}
+
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
 
@@ -503,6 +513,9 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
+  draggabilly@3.0.0:
+    resolution: {integrity: sha512-aEs+B6prbMZQMxc9lgTpCBfyCUhRur/VFucHhIOvlvvdARTj7TcDmX/cdOUtqbjJJUh7+agyJXR5Z6IFe1MxwQ==}
+
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
@@ -516,6 +529,9 @@ packages:
     resolution: {integrity: sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==}
     engines: {node: '>=12'}
     hasBin: true
+
+  ev-emitter@2.1.2:
+    resolution: {integrity: sha512-jQ5Ql18hdCQ4qS+RCrbLfz1n+Pags27q5TwMKvZyhp5hh2UULUYZUy1keqj6k6SYsdqIYjnmz7xyyEY0V67B8Q==}
 
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
@@ -540,6 +556,9 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  get-size@3.0.0:
+    resolution: {integrity: sha512-Y8aiXLq4leR7807UY0yuKEwif5s3kbVp1nTv+i4jBeoUzByTLKkLWu/HorS6/pB+7gsB0o7OTogC8AoOOeT0Hw==}
 
   get-stream@6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
@@ -837,6 +856,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  unidragger@3.0.1:
+    resolution: {integrity: sha512-RngbGSwBFmqGBWjkaH+yB677uzR95blSQyxq6hYbrQCejH3Mx1nm8DVOuh3M9k2fQyTstWUG5qlgCnNqV/9jVw==}
+
   wavesurfer.js@7.8.1:
     resolution: {integrity: sha512-KMebCPZF7jjo1/B+G7JGJgQc7hshIhJLnM/gUi4pdyCwb89s4apivpVZY2kdvausqbm+ceeudvKGPBcR9uqXnQ==}
 
@@ -1104,6 +1126,8 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
 
+  '@types/draggabilly@2.1.6': {}
+
   '@types/estree@1.0.5': {}
 
   '@unvt/sprite-one@0.1.1':
@@ -1200,6 +1224,11 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
+  draggabilly@3.0.0:
+    dependencies:
+      get-size: 3.0.0
+      unidragger: 3.0.1
+
   eastasianwidth@0.2.0: {}
 
   emoji-regex@8.0.0: {}
@@ -1231,6 +1260,8 @@ snapshots:
       '@esbuild/win32-arm64': 0.21.5
       '@esbuild/win32-ia32': 0.21.5
       '@esbuild/win32-x64': 0.21.5
+
+  ev-emitter@2.1.2: {}
 
   execa@5.1.1:
     dependencies:
@@ -1267,6 +1298,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  get-size@3.0.0: {}
 
   get-stream@6.0.1: {}
 
@@ -1555,6 +1588,10 @@ snapshots:
       - ts-node
 
   typescript@5.5.3: {}
+
+  unidragger@3.0.1:
+    dependencies:
+      ev-emitter: 2.1.2
 
   wavesurfer.js@7.8.1: {}
 

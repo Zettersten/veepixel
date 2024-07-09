@@ -9,6 +9,7 @@ import { CollisionDetector } from "./CollisionDetector";
 export class Floor {
     private readonly eventEmitter: EventEmitter;
     private readonly collisionDetector: CollisionDetector;
+    private readonly element: HTMLElement;
     private avatars: Avatar[] = [];
 
     /**
@@ -16,10 +17,8 @@ export class Floor {
      * @param element - The DOM element representing the floor.
      * @throws Error if the floor element is not found in the DOM.
      */
-    constructor(private readonly element: HTMLElement) {
-        if (!element) {
-            throw new Error("Floor element not provided");
-        }
+    constructor(elementSelector: string) {
+        this.element = document.querySelector(elementSelector) as HTMLElement;
         this.eventEmitter = new EventEmitter();
         this.collisionDetector = new CollisionDetector();
         this.setupResizeListener();
@@ -69,25 +68,15 @@ export class Floor {
      * Checks if a position is free from collisions.
      * @param x - The x coordinate to check.
      * @param y - The y coordinate to check.
-     * @param avatar - The avatar to check for (excluded from collision checks).
+     * @param excludeAvatar - The avatar to exclude from collision checks.
      * @returns True if the position is free, false otherwise.
      */
     public isPositionFree(x: number, y: number, excludeAvatar?: Avatar): boolean {
-
-        let width = 0;
-        let height = 0;
-
-        if (excludeAvatar) {
-            const collision = excludeAvatar.getCollisionRect();
-            width = collision.width;
-            height = collision.height;
-        }
-
-        const rect = {
+        const rect: Rect = {
             x,
             y,
-            width: width,
-            height: height
+            width: excludeAvatar ? excludeAvatar.getCollisionRect().width : 0,
+            height: excludeAvatar ? excludeAvatar.getCollisionRect().height : 0
         };
 
         return !this.avatars.some(avatar => {
@@ -162,7 +151,7 @@ export class Floor {
     public constrainPosition(x: number, y: number, width: number, height: number): { x: number, y: number } {
         const floorWidth = this.element.clientWidth;
         const floorHeight = this.element.clientHeight;
-    
+
         return {
             x: Math.max(0, Math.min(x, floorWidth - width)),
             y: Math.max(0, Math.min(y, floorHeight - height))
@@ -176,23 +165,49 @@ export class Floor {
      * @param y - The proposed y coordinate.
      * @returns The constrained position.
      */
-    public constrainPositionWithCollision(avatar: Avatar, x: number, y: number): { x: number, y: number } {
-        const constrained = this.constrainPosition(x, y, avatar.getWidth(), avatar.getHeight());
-    
+    public constrainPositionWithCollision(avatar: Avatar, newX: number, newY: number): { x: number, y: number } {
         const avatarRect = avatar.getCollisionRect();
-        avatarRect.x = constrained.x;
-        avatarRect.y = constrained.y;
-    
+        const boundingBox = avatar.getBoundingBox();
+
+        // Adjust newX and newY to account for bounding box offsets
+        newX += boundingBox.x;
+        newY += boundingBox.y;
+
+        avatarRect.x = newX;
+        avatarRect.y = newY;
+
         for (const otherAvatar of this.avatars) {
             if (otherAvatar !== avatar) {
                 const otherRect = otherAvatar.getCollisionRect();
+
                 if (this.collisionDetector.isColliding(avatarRect, otherRect)) {
-                    return avatar.getPosition();
+
+                    // Calculate overlaps
+                    const leftOverlap = (newX + avatarRect.width) - otherRect.x;
+                    const rightOverlap = (otherRect.x + otherRect.width) - newX;
+                    const topOverlap = (newY + avatarRect.height) - otherRect.y;
+                    const bottomOverlap = (otherRect.y + otherRect.height) - newY;
+
+                    const minOverlap = Math.min(leftOverlap, rightOverlap, topOverlap, bottomOverlap);
+
+                    if (minOverlap === leftOverlap) {
+                        newX = otherRect.x - avatarRect.width;
+                    } else if (minOverlap === rightOverlap) {
+                        newX = otherRect.x + otherRect.width;
+                    } else if (minOverlap === topOverlap) {
+                        newY = otherRect.y - avatarRect.height;
+                    } else if (minOverlap === bottomOverlap) {
+                        newY = otherRect.y + otherRect.height;
+                    }
                 }
             }
         }
-    
-        return constrained;
+
+        // Adjust newX and newY back to account for bounding box offsets
+        newX -= boundingBox.x;
+        newY -= boundingBox.y;
+
+        return { x: newX, y: newY };
     }
 
     /**

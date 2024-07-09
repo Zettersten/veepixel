@@ -4,12 +4,11 @@ import { AvatarSprite, AvatarSpriteType, AvatarSprites, Rect, Position } from ".
  * Manages sprite animations and collision detection for avatars.
  */
 export class SpriteManager {
-
     private boundingBox: Rect | null = null;
     private currentSpriteType: AvatarSpriteType | null = null;
     private currentSpriteIndex: number = 0;
-    private spriteBoundingBox: Rect | null = null;
     private debugElement: HTMLDivElement | null = null;
+    private fullSizeDebugElement: HTMLDivElement | null = null;
 
     /**
      * Creates a new SpriteManager instance.
@@ -92,8 +91,13 @@ export class SpriteManager {
         });
     }
     
+    /**
+     * Gets the current bounding box of the sprite.
+     * @returns The bounding box.
+     */
     public getBoundingBox(): Rect {
-        return this.boundingBox || { x: 0, y: 0, width: this.width, height: this.height };
+        const box = this.boundingBox || { x: 0, y: 0, width: this.width, height: this.height };
+        return box;
     }
 
     /**
@@ -102,12 +106,12 @@ export class SpriteManager {
      * @returns The collision rectangle.
      */
     public getCollisionRect(position: Position): Rect {
-        if (this.spriteBoundingBox) {
+        if (this.boundingBox) {
             return {
-                x: this.spriteBoundingBox.x,
-                y: this.spriteBoundingBox.y,
-                width: this.spriteBoundingBox.width,
-                height: this.spriteBoundingBox.height
+                x: this.boundingBox.x,
+                y: this.boundingBox.y,
+                width: this.boundingBox.width,
+                height: this.boundingBox.height
             };
         } else {
             return {
@@ -129,27 +133,39 @@ export class SpriteManager {
             if (!this.debugElement) {
                 this.debugElement = document.createElement('div');
                 this.debugElement.style.position = 'absolute';
-                this.debugElement.style.border = '2px solid red';
                 this.debugElement.style.pointerEvents = 'none';
                 parentElement.appendChild(this.debugElement);
             }
+            if (!this.fullSizeDebugElement) {
+                this.fullSizeDebugElement = document.createElement('div');
+                this.fullSizeDebugElement.style.position = 'absolute';
+                this.fullSizeDebugElement.style.pointerEvents = 'none';
+                parentElement.appendChild(this.fullSizeDebugElement);
+            }
             this.updateDebugBoundingBox();
             this.debugElement.style.display = 'block';
-        } else if (this.debugElement) {
+            this.fullSizeDebugElement.style.display = 'block';
+        } else if (this.debugElement && this.fullSizeDebugElement) {
             this.debugElement.style.display = 'none';
+            this.fullSizeDebugElement.style.display = 'none';
         }
     }
 
-    /**
-     * Updates the position and size of the debug bounding box.
-     */
     private updateDebugBoundingBox(): void {
-        if (this.debugElement && this.spriteBoundingBox) {
-            const { x, y, width, height } = this.spriteBoundingBox;
-            this.debugElement.style.left = `${x}px`;
-            this.debugElement.style.top = `${y}px`;
-            this.debugElement.style.width = `${width - 2}px`;
-            this.debugElement.style.height = `${height - 2}px`;
+        if (this.debugElement && this.fullSizeDebugElement && this.boundingBox) {
+            // Actual bounding box (red)
+            this.debugElement.style.left = `${this.boundingBox.x}px`;
+            this.debugElement.style.top = `${this.boundingBox.y}px`;
+            this.debugElement.style.width = `${this.boundingBox.width - 2}px`;
+            this.debugElement.style.height = `${this.boundingBox.height - 2}px`;
+            this.debugElement.style.border = '2px solid red';
+    
+            // Full size bounding box (yellow)
+            this.fullSizeDebugElement.style.left = '0px';
+            this.fullSizeDebugElement.style.top = '0px';
+            this.fullSizeDebugElement.style.width = `${this.width - 2}px`;
+            this.fullSizeDebugElement.style.height = `${this.height - 2}px`;
+            this.fullSizeDebugElement.style.border = '2px solid yellow';
         }
     }
 }

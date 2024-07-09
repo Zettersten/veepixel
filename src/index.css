@@ -298,5 +298,4 @@ body {
     transform-origin: left top;
     will-change: transform;
     cursor: pointer;
-    box-shadow: inset 2px 2px 0px 0 yellow, inset -2px -2px 0px 0 yellow;
 }

@@ -2,11 +2,13 @@ import { Floor } from "./Floor";
 import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "./Types";
 import { EventEmitter } from "./EventEmitter";
 import { SpriteManager } from "./SpriteManager";
+import Draggabilly from 'draggabilly';
 
 /**
  * Represents an avatar in the game.
  */
 export class Avatar {
+    private draggabilly: Draggabilly | null = null;
     private readonly eventEmitter: EventEmitter;
     private readonly spriteManager: SpriteManager;
     private readonly element: HTMLDivElement;
@@ -34,6 +36,7 @@ export class Avatar {
         this.spriteManager = new SpriteManager(sprites);
         this.element = this.createAvatarElement();
         this.setupEventListeners();
+        this.setZIndex(1);
     }
 
     /**
@@ -68,6 +71,15 @@ export class Avatar {
     }
 
     /**
+     * Retrieves the bounding box of the current object.
+     * @returns The bounding box of the object.
+     */
+    public getBoundingBox(): Rect {
+        const boundingBox = this.spriteManager.getBoundingBox();
+        return boundingBox;
+    }
+
+    /**
      * Sets the position of the avatar's element.
      * @param x - The x position.
      * @param y - The y position.
@@ -79,24 +91,40 @@ export class Avatar {
     }
 
     /**
-     * Moves the avatar by a given delta and updates the animation.
-     * @param dx - The change in x position.
-     * @param dy - The change in y position.
-     */
+    * Moves the avatar by a given delta and updates the animation.
+    * @param dx - The change in x position.
+    * @param dy - The change in y position.
+    */
     public move(dx: number, dy: number): void {
-        const newX = this.position.x + dx;
-        const newY = this.position.y + dy;
-    
+        const currentPosition = this.getPosition();
+        const boundingBox = this.spriteManager.getBoundingBox();
+        const newX = currentPosition.x + dx;
+        const newY = currentPosition.y + dy;
+
         const constrained = this.floor.constrainPositionWithCollision(this, newX, newY);
-    
-        if (constrained.x !== this.position.x || constrained.y !== this.position.y) {
+
+        if (constrained.x !== currentPosition.x || constrained.y !== currentPosition.y) {
+            // Set the position directly without subtracting the bounding box offsets
             this.setPosition(constrained.x, constrained.y);
-    
+
             this.currentMovementDirection =
                 Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') :
-                dy !== 0 ? (dy > 0 ? 'down' : 'up') : null;
-    
-            this.startAnimation(this.currentMovementDirection === 'down' ? 'swayFront' : 'swayBack');
+                    dy !== 0 ? (dy > 0 ? 'down' : 'up') : null;
+
+            switch (this.currentMovementDirection) {
+                case 'left':
+                    this.startAnimation('walkLeft');
+                    break;
+                case 'right':
+                    this.startAnimation('walkRight');
+                    break;
+                case 'up':
+                    this.startAnimation('walkUp');
+                    break;
+                case 'down':
+                    this.startAnimation('walkDown');
+                    break;
+            }
         }
     }
 
@@ -105,7 +133,6 @@ export class Avatar {
      * @param spriteType - The type of sprite animation to start.
      */
     public startAnimation(spriteType: AvatarSpriteType): void {
-        console.log(spriteType);
         this.spriteManager.startAnimation(spriteType);
         this.eventEmitter.emit('animationStarted', spriteType);
     }
@@ -133,19 +160,28 @@ export class Avatar {
     private startDrag = (event: MouseEvent): void => {
         this.isDragging = true;
         this.isHovering = false;
-    
+
         const rect = this.floor.getElement().getBoundingClientRect();
         this.dragOffset = {
             x: event.clientX - rect.left - this.position.x,
             y: event.clientY - rect.top - this.position.y
         };
-    
+
         this.originalPosition = { ...this.position };
-    
+        this.setZIndex(1000);
+
         document.addEventListener('mousemove', this.onDrag);
         document.addEventListener('mouseup', this.stopDrag);
-    
+
         this.eventEmitter.emit('dragStarted', event);
+    }
+
+    /**
+     * Sets the z-index of the element.
+     * @param zIndex - The z-index value to set.
+     */
+    public setZIndex(zIndex: number): void {
+        this.element.style.zIndex = zIndex.toString();
     }
 
     /**
@@ -153,27 +189,27 @@ export class Avatar {
      */
     private onDrag = (event: MouseEvent): void => {
         if (!this.isDragging || !this.dragOffset) return;
-    
+
         const rect = this.floor.getElement().getBoundingClientRect();
         const newX = event.clientX - rect.left - this.dragOffset.x;
         const newY = event.clientY - rect.top - this.dragOffset.y;
-    
+
         const previousPosition = { ...this.position };
         const constrained = this.floor.constrainPosition(newX, newY, this.getWidth(), this.getHeight());
-        
+
         this.setPosition(constrained.x, constrained.y);
-    
+
         const dx = constrained.x - previousPosition.x;
         const dy = constrained.y - previousPosition.y;
-    
+
         if (Math.abs(dx) > this.dragThreshold || Math.abs(dy) > this.dragThreshold) {
-            const animationType = 
+            const animationType =
                 Math.abs(dx) > Math.abs(dy)
                     ? (dx > 0 ? 'draggedRight' : 'draggedLeft')
                     : (dy > 0 ? 'draggedDown' : 'draggedUp');
             this.startAnimation(animationType);
         }
-    
+
         this.eventEmitter.emit('dragging', { x: constrained.x, y: constrained.y });
     }
 
@@ -182,10 +218,10 @@ export class Avatar {
      */
     private stopDrag = (): void => {
         this.isDragging = false;
-    
+
         document.removeEventListener('mousemove', this.onDrag);
         document.removeEventListener('mouseup', this.stopDrag);
-    
+
         if (this.originalPosition) {
             if (!this.floor.isPositionFree(this.position.x, this.position.y, this)) {
                 // Move back to original position if dropped on another avatar
@@ -193,7 +229,8 @@ export class Avatar {
             }
             this.originalPosition = null;
         }
-    
+
+        this.setZIndex(1);
         this.startAnimation(this.isHovering ? 'hovering' : 'breathBack');
         this.eventEmitter.emit('dragStopped', this.position);
     }
@@ -253,14 +290,13 @@ export class Avatar {
     public getWidth(): number {
         return this.spriteManager.width;
     }
-    
+
     public getHeight(): number {
         return this.spriteManager.height;
     }
 
     /**
-     * Updates the avatar's sprite with a new image path.
-     * @param newPath - The new image path for the avatar's sprite.
+     * Recalculates the bounding box of the avatar.
      */
     public async recalculateBoundingBox(): Promise<void> {
         await this.spriteManager.recalculateBoundingBox(this.options.path);
@@ -272,12 +308,21 @@ export class Avatar {
      */
     public getCollisionRect(): Rect {
         const boundingBox = this.spriteManager.getBoundingBox();
-        return {
+        const rect = {
             x: this.position.x + boundingBox.x,
             y: this.position.y + boundingBox.y,
             width: boundingBox.width,
             height: boundingBox.height
         };
+        return rect;
+    }
+
+    /**
+     * Get the name from the options object.
+     * @returns The name as a string.
+     */
+    public getName(): string {
+        return this.options.name;
     }
 
     /**

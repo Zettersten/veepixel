@@ -11,6 +11,7 @@ export class Music {
     private readonly eventEmitter: EventEmitter;
     private readonly parentElement: HTMLElement;
     private currentSongIndex: number = 0;
+    private isFirstRender: boolean;
 
     /**
      * Creates a new Music instance.
@@ -22,8 +23,8 @@ export class Music {
         this.audioPlayer = this.createAudioPlayer(containerSelector);
         this.eventEmitter = new EventEmitter();
         this.setupEventListeners();
-        this.setVolume(0.5);
-        //this.next();
+        this.setVolume(0.9);
+        this.isFirstRender = true;
     }
 
     /**
@@ -68,7 +69,7 @@ export class Music {
             minPxPerSec: 1,
             fillParent: true,
             mediaControls: false,
-            autoplay: false,
+            autoplay: true,
             interact: true,
             dragToSeek: false,
             hideScrollbar: true,
@@ -119,6 +120,13 @@ export class Music {
      * Plays the current song.
      */
     public play(): void {
+
+        if (this.isFirstRender) {
+            this.currentSongIndex = (this.currentSongIndex + 1) % this.playlist.length;
+            this.loadCurrentSong();
+            this.isFirstRender = false;
+        }
+
         this.audioPlayer.play();
     }
 

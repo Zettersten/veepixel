@@ -16,16 +16,20 @@
     }
   ],
   "engines": {
-      "node": ">=20.10.0",
-      "pnpm": ">=9.4.0"
+    "node": ">=20.10.0",
+    "pnpm": ">=9.4.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@unvt/sprite-one": "^0.1.1",
+    "draggabilly": "^3.0.0",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2",
     "wavesurfer.js": "^7.8.0"
+  },
+  "dependencies": {
+    "@types/draggabilly": "^2.1.6"
   }
 }
