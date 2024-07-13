@@ -12,7 +12,7 @@ const avatars = [
 
     const folderName = avatars[index];
 
-    await generateSprite(`./sprites/${folderName}`, [`./sprites/${folderName}`]);
+    await generateSprite(`./build/sprites/${folderName}`, [`./build/sprites/${folderName}`]);
 
     const result = {
       breathBack: [],
@@ -50,10 +50,10 @@ const avatars = [
     }
 
     // save result as json
-    fs.writeFileSync(`./sprites/${folderName}.json`, JSON.stringify(result, null, 2));
+    fs.writeFileSync(`./src/Avatars/Sprites/${folderName}.json`, JSON.stringify(result, null, 2));
 
     // copy sprite image to assets/sprites folder
-    fs.copyFileSync(`./sprites/${folderName}.png`, `../assets/sprites/${folderName}.png`);
+    fs.copyFileSync(`./build/sprites/${folderName}.png`, `./public/sprites/${folderName}.png`);
 
   }
 })();

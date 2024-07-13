@@ -1,7 +1,7 @@
-import { Avatar } from "./Avatar";
-import { EventCallback, Rect } from "./Types";
-import { EventEmitter } from "./EventEmitter";
-import { CollisionDetector } from "./CollisionDetector";
+import { Avatar } from "../Avatars/Avatar";
+import type { EventCallback, Rect } from "../Types/Types";
+import { EventEmitter } from "../Utils/EventEmitter";
+import { CollisionDetector } from "../Animations/CollisionDetector";
 
 /**
  * Represents the game floor where avatars are placed.

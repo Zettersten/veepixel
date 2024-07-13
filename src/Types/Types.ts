@@ -38,7 +38,7 @@ export type AvatarSprites = {
  */
 export interface AvatarOptions {
     path: string;
-    name: string;
+    name: AvatarType;
 }
 
 /**
@@ -118,4 +118,4 @@ export type EventCallback = (...args: any[]) => void;
  * Represents the type of avatar.
  * @typedef {'ReflectiveRhino' | 'GaryBee' | 'AdaptableAlien'} AvatarType
  */
-export type AvatarType = 'ReflectiveRhino' | 'GaryBee' |  'AdaptableAlien';
+export type AvatarType = 'ReflectiveRhinoceros' | 'GaryBee' |  'AdaptableAlien' | 'AmbitiousAngel';

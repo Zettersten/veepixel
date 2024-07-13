@@ -81,8 +81,8 @@ img {
 /* Font Faces */
 @font-face {
     font-family: 'Silkscreen';
-    src: url('../assets/fonts/Silkscreen.woff2') format('woff2'),
-        url('../assets/fonts/Silkscreen.woff') format('woff');
+    src: url('/fonts/Silkscreen.woff2') format('woff2'),
+        url('/fonts/Silkscreen.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -90,8 +90,8 @@ img {
 
 @font-face {
     font-family: 'Silkscreen';
-    src: url('../assets/fonts/Silkscreen-Bold.woff2') format('woff2'),
-        url('../assets/fonts/Silkscreen-Bold.woff') format('woff');
+    src: url('/fonts/Silkscreen-Bold.woff2') format('woff2'),
+        url('/fonts/Silkscreen-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: block;
@@ -99,8 +99,8 @@ img {
 
 @font-face {
     font-family: 'Silkscreen Expanded';
-    src: url('../assets/fonts/Silkscreen-Expanded.woff2') format('woff2'),
-        url('../assets/fonts/Silkscreen-Expanded.woff') format('woff');
+    src: url('/fonts/Silkscreen-Expanded.woff2') format('woff2'),
+        url('/fonts/Silkscreen-Expanded.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -108,8 +108,8 @@ img {
 
 @font-face {
     font-family: 'Silkscreen Expanded';
-    src: url('../assets/fonts/Silkscreen-ExpandedBold.woff2') format('woff2'),
-        url('../assets/fonts/Silkscreen-ExpandedBold.woff') format('woff');
+    src: url('/fonts/Silkscreen-ExpandedBold.woff2') format('woff2'),
+        url('/fonts/Silkscreen-ExpandedBold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: block;
@@ -157,13 +157,13 @@ body {
     max-height: 1080px;
     width: 100%;
     height: 100%;
-    background: url(../assets/backgrounds/stadium.png) no-repeat center/cover;
+    background: url(/backgrounds/stadium.png) no-repeat center/cover;
     image-rendering: pixelated;
     position: relative;
 }
 
 #mask {
-    background-image: url(../assets/backgrounds/stadium-mask.png);
+    background-image: url(/backgrounds/stadium-mask.png);
     z-index: 1;
     pointer-events: none;
 }

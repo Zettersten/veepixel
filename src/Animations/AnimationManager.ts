@@ -1,11 +1,12 @@
-import { EventEmitter } from './EventEmitter';
-import { EventCallback, Animatable } from './Types';
+import { Avatar } from "../Avatars";
+import type { EventCallback } from "../Types/Types";
+import { EventEmitter } from "../Utils";
 
 /**
  * Manages the global animation loop for all game entities.
  */
 export class AnimationManager {
-    private entities: Set<Animatable> = new Set();
+    private entities: Set<Avatar> = new Set();
     private animationFrame: number | null = null;
     private lastUpdateTime: number = 0;
     private readonly updateInterval: number = 100; // 100ms, mimicking the original setInterval
@@ -19,7 +20,7 @@ export class AnimationManager {
      * Adds an entity to be managed by the animation loop.
      * @param entity - The entity to add.
      */
-    public addEntity(entity: Animatable): void {
+    public addEntity(entity: Avatar): void {
         this.entities.add(entity);
         this.eventEmitter.emit('entityAdded', entity);
     }
@@ -28,7 +29,7 @@ export class AnimationManager {
      * Removes an entity from the animation loop.
      * @param entity - The entity to remove.
      */
-    public removeEntity(entity: Animatable): void {
+    public removeEntity(entity: Avatar): void {
         if (this.entities.delete(entity)) {
             this.eventEmitter.emit('entityRemoved', entity);
         }

@@ -2,19 +2,13 @@
   "name": "veepixel",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "sprite": "node ./build/generateSprites.cjs"
   },
-  "json.schemas": [
-    {
-      "url": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
-      "fileMatch": [
-        "package.json",
-        "tsup.config.json"
-      ]
-    }
-  ],
   "engines": {
     "node": ">=20.10.0",
     "pnpm": ">=9.4.0"
@@ -27,6 +21,7 @@
     "draggabilly": "^3.0.0",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2",
+    "vite": "^5.3.3",
     "wavesurfer.js": "^7.8.0"
   },
   "dependencies": {

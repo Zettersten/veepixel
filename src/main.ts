@@ -1,11 +1,9 @@
-import "./index.css";
-import { Game } from "./Game";
-import { Floor } from "./Floor";
-import { Music } from "./Music";
-import { AnimationManager } from "./AnimationManager";
-import { UserManager } from "./UserManager";
-import { UserActionHandler } from "./UserActionHandler";
-import { AvatarType } from "./Types";
+import { AnimationManager } from "./Animations";
+import { Floor, Game } from "./Game";
+import { Music } from "./Muisc";
+import "./UI/styles.css";
+import { UserManager, UserActionHandler } from "./User";
+import type { AvatarType } from "./Types/Types";
 
 /**
  * Initializes and starts the game.
@@ -18,21 +16,15 @@ async function initializeGame(): Promise<void> {
     const music = new Music('.music-player');
     const game = new Game(floor, animationManager, userManager, userActionHandler);
 
-    const avatarCount = 3;
-    const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhino', 'GaryBee'];
+    const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhinoceros', 'GaryBee', 'AmbitiousAngel'];
 
-    for (let i = 0; i < avatarCount; i++) {
-
+    for (let i = 0; i < allAvatarTypes.length; i++) {
         const randomAvatarType = allAvatarTypes[i];
-
         await game.addUser(`User ${i}`, randomAvatarType);
     }
 
     game.start();
     music.play();
-
-    // Make game globally accessible for debugging
-    (window as any).game = game;
 }
 
 // Start the game when the DOM is fully loaded

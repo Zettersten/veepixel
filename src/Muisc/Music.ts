@@ -1,6 +1,6 @@
 import WaveSurfer from 'wavesurfer.js'
-import { EventEmitter } from './EventEmitter';
-import { EventCallback, Song } from './Types';
+import type { Song, EventCallback } from '../Types/Types';
+import { EventEmitter } from '../Utils';
 
 /**
  * Manages music playback and playlist functionality.
@@ -33,17 +33,17 @@ export class Music {
      */
     private initializePlaylist(): Song[] {
         return [
-            { id: 1, name: "Bit Adventure", url: "../assets/music/song-bit-adventure.mp3" },
-            { id: 2, name: "Bit of Hope", url: "../assets/music/song-bit-of-hope.mp3" },
-            { id: 3, name: "Funny Bits", url: "../assets/music/song-funny-bits.mp3" },
-            { id: 4, name: "Nostalgia", url: "../assets/music/song-nostalgia.mp3" },
-            { id: 5, name: "Platformer", url: "../assets/music/song-platformer.mp3" },
-            { id: 6, name: "Retro Funk", url: "../assets/music/song-retro-funk.mp3" },
-            { id: 7, name: "Sound Universe Studio", url: "../assets/music/song-8-bit-game-song.mp3" },
-            { id: 8, name: "MoodMode", url: "../assets/music/song-8-bit-arcade.mp3" },
-            { id: 9, name: "Nick Panek", url: "../assets/music/song-hardboss.mp3" },
-            { id: 10, name: "MoodMode", url: "../assets/music/song-8-bit-game.mp3" },
-            { id: 11, name: "Lesia Kower", url: "../assets/music/song-battle-time.mp3" }
+            { id: 1, name: "Bit Adventure", url: "../music/song-bit-adventure.mp3" },
+            { id: 2, name: "Bit of Hope", url: "../music/song-bit-of-hope.mp3" },
+            { id: 3, name: "Funny Bits", url: "../music/song-funny-bits.mp3" },
+            { id: 4, name: "Nostalgia", url: "../music/song-nostalgia.mp3" },
+            { id: 5, name: "Platformer", url: "../music/song-platformer.mp3" },
+            { id: 6, name: "Retro Funk", url: "../music/song-retro-funk.mp3" },
+            { id: 7, name: "Sound Universe Studio", url: "../music/song-8-bit-game-song.mp3" },
+            { id: 8, name: "MoodMode", url: "../music/song-8-bit-arcade.mp3" },
+            { id: 9, name: "Nick Panek", url: "../music/song-hardboss.mp3" },
+            { id: 10, name: "MoodMode", url: "../music/song-8-bit-game.mp3" },
+            { id: 11, name: "Lesia Kower", url: "../music/song-battle-time.mp3" }
         ];
     }
 

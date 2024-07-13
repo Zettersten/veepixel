@@ -1,14 +1,13 @@
+import { AnimationManager } from "../Animations/AnimationManager";
+import { AdaptableAlien } from "../Avatars/AdaptableAlien";
+import { Avatar } from "../Avatars/Avatar";
+import { GaryBee } from "../Avatars/GaryBee";
+import { ReflectiveRhino } from "../Avatars/ReflectiveRhino";
+import { User, UserActionHandler, UserManager } from "../User";
+import { EventEmitter } from "../Utils/EventEmitter";
 import { Floor } from "./Floor";
-import { Avatar } from "./Avatar";
-import { AnimationManager } from "./AnimationManager";
-import { UserActionHandler } from "./UserActionHandler";
-import { AvatarFactory, AvatarOptions, AvatarSprites, AvatarType, EventCallback, UserAction } from "./Types";
-import { UserManager } from "./UserManager";
-import { EventEmitter } from "./EventEmitter";
-import { AdaptableAlien } from "./Avatars/AdaptableAlien";
-import { User } from "./User";
-import { ReflectiveRhino } from "./Avatars/ReflectiveRhino";
-import { GaryBee } from "./Avatars/GaryBee";
+import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types/Types";
+
 
 /**
  * Represents the main game logic and orchestrates game components.
@@ -124,6 +123,8 @@ export class Game {
             sprites
         );
 
+        console.log(sprites)
+
         this.floor.placeAvatarRandomly(user.avatar);
         this.animationManager.addEntity(user.avatar);
         user.avatar.startAnimation('breathBack');
@@ -134,11 +135,13 @@ export class Game {
     private getAvatarFactory(avatarType: AvatarType): AvatarFactory {
 
         switch (avatarType) {
-            case 'ReflectiveRhino':
+            case 'ReflectiveRhinoceros':
                 return new ReflectiveRhino();
             case 'GaryBee':
                 return new GaryBee();
             case 'AdaptableAlien':
+                return new AdaptableAlien();
+            case 'AmbitiousAngel':
                 return new AdaptableAlien();
             default:
                 return new AdaptableAlien();

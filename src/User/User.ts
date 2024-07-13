@@ -1,6 +1,7 @@
-import { Avatar } from "./Avatar";
-import { EventEmitter } from "./EventEmitter";
-import { EventCallback } from "./Types";
+import { Avatar } from "../Avatars";
+import { EventEmitter } from "../Utils";
+import type { EventCallback } from "../Types/Types";
+
 
 /**
  * Represents a user in the game.

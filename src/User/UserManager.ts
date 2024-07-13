@@ -1,8 +1,9 @@
+import { Avatar } from "../Avatars";
+import { Floor } from "../Game";
+import { EventEmitter } from "../Utils";
 import { User } from "./User";
-import { Avatar } from "./Avatar";
-import { Floor } from "./Floor";
-import { AvatarOptions, AvatarSprites, EventCallback } from "./Types";
-import { EventEmitter } from "./EventEmitter";
+import type { AvatarOptions, AvatarSprites, EventCallback } from "../Types/Types";
+
 
 /**
  * Manages users in the game.
@@ -159,7 +160,7 @@ export class UserManager {
     public on(eventName: string, callback: EventCallback): void {
         this.eventEmitter.on(eventName, callback);
     }
-    
+
     private async createAvatar(options: AvatarOptions, sprites: AvatarSprites): Promise<Avatar> {
         const avatar = new Avatar(this.floor, options, sprites);
         await avatar.recalculateBoundingBox();

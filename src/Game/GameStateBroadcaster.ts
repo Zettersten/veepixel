@@ -1,7 +1,4 @@
-import { EventEmitter } from "./EventEmitter";
-import { Game } from "./Game";
-import { Music } from "./Music";
-import { Avatar } from "./Avatar";
+import { EventEmitter } from "../Utils";
 
 export class GameStateBroadcaster {
     private readonly eventEmitter: EventEmitter;
@@ -9,8 +6,6 @@ export class GameStateBroadcaster {
     private intervalId: number | null = null;
 
     constructor(
-        private readonly game: Game,
-        private readonly music: Music,
         private readonly broadcastUrl: string,
         interval: number = 100 // broadcast every 100ms by default
     ) {

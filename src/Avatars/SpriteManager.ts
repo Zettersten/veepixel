@@ -1,4 +1,4 @@
-import { AvatarSprite, AvatarSpriteType, AvatarSprites, Rect, Position } from "./Types";
+import { AvatarSprite, AvatarSpriteType, AvatarSprites, Rect, Position } from "../Types/Types";
 
 /**
  * Manages sprite animations and collision detection for avatars.

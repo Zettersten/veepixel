@@ -1,14 +1,12 @@
-import { Floor } from "./Floor";
-import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "./Types";
-import { EventEmitter } from "./EventEmitter";
-import { SpriteManager } from "./SpriteManager";
-import Draggabilly from 'draggabilly';
+import { Floor } from "../Game/Floor";
+import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "../Types/Types";
+import { EventEmitter } from "../Utils/EventEmitter";
+import { SpriteManager } from "../Avatars/SpriteManager";
 
 /**
  * Represents an avatar in the game.
  */
 export class Avatar {
-    private draggabilly: Draggabilly | null = null;
     private readonly eventEmitter: EventEmitter;
     private readonly spriteManager: SpriteManager;
     private readonly element: HTMLDivElement;
@@ -97,7 +95,6 @@ export class Avatar {
     */
     public move(dx: number, dy: number): void {
         const currentPosition = this.getPosition();
-        const boundingBox = this.spriteManager.getBoundingBox();
         const newX = currentPosition.x + dx;
         const newY = currentPosition.y + dy;
 
