@@ -7,6 +7,7 @@ import { User, UserActionHandler, UserManager } from "../User";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { Floor } from "./Floor";
 import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types";
+import { AmbitiousAngel } from "../Avatars";
 
 
 /**
@@ -141,7 +142,7 @@ export class Game {
             case 'AdaptableAlien':
                 return new AdaptableAlien();
             case 'AmbitiousAngel':
-                return new AdaptableAlien();
+                return new AmbitiousAngel();
             default:
                 return new AdaptableAlien();
         }

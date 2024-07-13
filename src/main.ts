@@ -2,6 +2,7 @@ import { AnimationManager } from "./Animations";
 import { Floor, Game } from "./Game";
 import { Music } from "./Muisc";
 import "./UI/styles.css";
+import 'virtual:stylex.css'
 import { UserManager, UserActionHandler } from "./User";
 import type { AvatarType } from "./Types";
 

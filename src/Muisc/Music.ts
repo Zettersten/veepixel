@@ -1,6 +1,7 @@
 import WaveSurfer from 'wavesurfer.js'
 import type { Song, EventCallback } from '../Types';
 import { EventEmitter } from '../Utils';
+import { MusicPlayer } from './MusicPlayer';
 
 /**
  * Manages music playback and playlist functionality.
@@ -18,6 +19,8 @@ export class Music {
      * @param containerSelector - The CSS selector for the audio player container.
      */
     constructor(containerSelector: string) {
+        const el = MusicPlayer();
+        console.log(el);
         this.parentElement = document.querySelector(containerSelector)!.parentElement as HTMLElement;
         this.playlist = this.initializePlaylist();
         this.audioPlayer = this.createAudioPlayer(containerSelector);

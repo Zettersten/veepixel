@@ -4,7 +4,8 @@ const fs = require('fs');
 const avatars = [
   'adaptable-alien',
   'gary-bee',
-  'reflective-rhinoceros'
+  'reflective-rhinoceros',
+  'ambitious-angel'
 ];
 
 (async function () {

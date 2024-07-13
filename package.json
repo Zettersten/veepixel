@@ -22,9 +22,14 @@
     "tsup": "^8.1.0",
     "typescript": "^5.5.2",
     "vite": "^5.3.3",
+    "vite-plugin-stylex": "^0.10.1",
+    "vite-plugin-stylex-dev": "^0.8.0",
     "wavesurfer.js": "^7.8.0"
   },
   "dependencies": {
+    "@kitajs/html": "^4.1.0",
+    "@kitajs/ts-html-plugin": "^4.0.1",
+    "@stylexjs/stylex": "^0.7.5",
     "@types/draggabilly": "^2.1.6"
   }
 }

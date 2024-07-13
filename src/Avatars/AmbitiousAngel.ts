@@ -1,11 +1,11 @@
-import json from "./Sprites/adaptable-alien.json";
+import json from "./Sprites/ambitious-angel.json";
 import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types";
 
 export class AmbitiousAngel implements AvatarFactory {
 
     get options(): AvatarOptions {
         return {
-            path: "../sprites/adaptable-alien.png",
+            path: "../sprites/ambitious-angel.png",
             name: "AmbitiousAngel",
         };
     }
