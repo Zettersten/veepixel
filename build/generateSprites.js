@@ -52,6 +52,9 @@ const avatars = [
     // save result as json
     fs.writeFileSync(`./sprites/${folderName}.json`, JSON.stringify(result, null, 2));
 
+    // copy sprite image to assets/sprites folder
+    fs.copyFileSync(`./sprites/${folderName}.png`, `../assets/sprites/${folderName}.png`);
+
   }
 })();
 
