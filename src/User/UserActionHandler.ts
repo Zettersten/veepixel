@@ -1,7 +1,7 @@
 import { Avatar } from "../Avatars";
 import { EventEmitter } from "../Utils";
 import { UserManager } from "./UserManager";
-import type { UserAction, AvatarSpriteType, KeyboardMoveType, EventCallback } from "../Types/Types";
+import type { UserAction, AvatarSpriteType, KeyboardMoveType, EventCallback } from "../Types";
 
 /**
  * Handles user actions in the game.

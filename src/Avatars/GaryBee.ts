@@ -1,5 +1,5 @@
 import json from "./Sprites/gary-bee.json";
-import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types/Types";
+import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types";
 
 export class GaryBee implements AvatarFactory {
 

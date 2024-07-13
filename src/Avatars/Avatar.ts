@@ -1,5 +1,5 @@
 import { Floor } from "../Game/Floor";
-import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "../Types/Types";
+import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "../Types";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { SpriteManager } from "../Avatars/SpriteManager";
 

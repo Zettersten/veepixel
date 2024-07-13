@@ -2,7 +2,7 @@ import { Avatar } from "../Avatars";
 import { Floor } from "../Game";
 import { EventEmitter } from "../Utils";
 import { User } from "./User";
-import type { AvatarOptions, AvatarSprites, EventCallback } from "../Types/Types";
+import type { AvatarOptions, AvatarSprites, EventCallback } from "../Types";
 
 
 /**

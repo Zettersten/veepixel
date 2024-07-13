@@ -6,7 +6,7 @@ import { ReflectiveRhino } from "../Avatars/ReflectiveRhino";
 import { User, UserActionHandler, UserManager } from "../User";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { Floor } from "./Floor";
-import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types/Types";
+import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types";
 
 
 /**
@@ -123,7 +123,6 @@ export class Game {
             sprites
         );
 
-        console.log(sprites)
 
         this.floor.placeAvatarRandomly(user.avatar);
         this.animationManager.addEntity(user.avatar);

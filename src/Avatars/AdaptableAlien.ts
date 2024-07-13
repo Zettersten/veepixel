@@ -1,5 +1,5 @@
 import json from "./Sprites/adaptable-alien.json";
-import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types/Types";
+import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types";
 
 export class AdaptableAlien implements AvatarFactory {
 

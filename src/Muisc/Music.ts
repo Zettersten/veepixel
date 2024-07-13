@@ -1,5 +1,5 @@
 import WaveSurfer from 'wavesurfer.js'
-import type { Song, EventCallback } from '../Types/Types';
+import type { Song, EventCallback } from '../Types';
 import { EventEmitter } from '../Utils';
 
 /**

@@ -1,6 +1,6 @@
 import { Avatar } from "../Avatars";
 import { EventEmitter } from "../Utils";
-import type { EventCallback } from "../Types/Types";
+import type { EventCallback } from "../Types";
 
 
 /**

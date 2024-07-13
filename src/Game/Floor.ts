@@ -1,5 +1,5 @@
 import { Avatar } from "../Avatars/Avatar";
-import type { EventCallback, Rect } from "../Types/Types";
+import type { EventCallback, Rect } from "../Types";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { CollisionDetector } from "../Animations/CollisionDetector";
 

@@ -1,4 +1,4 @@
-import type { Rect } from "../Types/Types";
+import type { Rect } from "../Types";
 
 /**
  * Handles collision detection between rectangles.

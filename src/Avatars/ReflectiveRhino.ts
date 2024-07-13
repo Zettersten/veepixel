@@ -1,5 +1,5 @@
 import json from "./Sprites/reflective-rhinoceros.json";
-import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types/Types";
+import type { AvatarFactory, AvatarOptions, AvatarSprites } from "../Types";
 
 export class ReflectiveRhino implements AvatarFactory {
 

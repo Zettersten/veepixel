@@ -3,7 +3,7 @@ import { Floor, Game } from "./Game";
 import { Music } from "./Muisc";
 import "./UI/styles.css";
 import { UserManager, UserActionHandler } from "./User";
-import type { AvatarType } from "./Types/Types";
+import type { AvatarType } from "./Types";
 
 /**
  * Initializes and starts the game.

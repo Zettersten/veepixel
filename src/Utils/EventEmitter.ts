@@ -1,4 +1,4 @@
-import type { EventCallback } from "../Types/Types";
+import type { EventCallback } from "../Types";
 
 /**
  * A simple event emitter class for handling and dispatching events.
