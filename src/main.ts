@@ -5,16 +5,22 @@ import "./UI/styles.css";
 import 'virtual:stylex.css'
 import { UserManager, UserActionHandler } from "./User";
 import type { AvatarType } from "./Types";
+import { getManifest, renderFragment } from "./Utils";
+import { GameLayout } from "./UI/Components/GameLayout";
 
 /**
  * Initializes and starts the game.
  */
 async function initializeGame(): Promise<void> {
+
+    const layout = renderFragment(GameLayout());
+    document.body.appendChild(layout);
+
     const floor = new Floor("#floor");
     const userManager = new UserManager(floor);
     const animationManager = new AnimationManager();
     const userActionHandler = new UserActionHandler(userManager);
-    const music = new Music('.music-player');
+    const music = new Music();
     const game = new Game(floor, animationManager, userManager, userActionHandler);
 
     const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhinoceros', 'GaryBee', 'AmbitiousAngel'];

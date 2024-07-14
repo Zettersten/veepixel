@@ -59,7 +59,7 @@ export class UserActionHandler {
     public handleKeyboardAction(avatar: Avatar, key: string, isKeyDown: boolean): void {
         if (!avatar) return;
 
-        const moveDistance = 5; // pixels to move per frame
+        const moveDistance = 10; // pixels to move per frame
 
         switch (key) {
             case 'ArrowLeft':
@@ -154,7 +154,7 @@ export class UserActionHandler {
      */
     private handleKeyboardMoveAction(avatar: Avatar, key?: KeyboardMoveType): void {
         if (key) {
-            const moveDistance = 5; // pixels to move per frame
+            const moveDistance = 10; // pixels to move per frame
             switch (key) {
                 case 'ArrowLeft':
                     avatar.move(-moveDistance, 0);

@@ -1,7 +1,7 @@
 import WaveSurfer from 'wavesurfer.js'
 import type { Song, EventCallback } from '../Types';
-import { EventEmitter } from '../Utils';
-import { MusicPlayer } from './MusicPlayer';
+import { EventEmitter, renderFragment } from '../Utils';
+import { MusicPlayer } from '../UI/Components/MusicPlayer';
 
 /**
  * Manages music playback and playlist functionality.
@@ -10,20 +10,17 @@ export class Music {
     private readonly playlist: Song[];
     private readonly audioPlayer: WaveSurfer;
     private readonly eventEmitter: EventEmitter;
-    private readonly parentElement: HTMLElement;
+    private readonly element: HTMLElement;
     private currentSongIndex: number = 0;
     private isFirstRender: boolean;
 
     /**
      * Creates a new Music instance.
-     * @param containerSelector - The CSS selector for the audio player container.
      */
-    constructor(containerSelector: string) {
-        const el = MusicPlayer();
-        console.log(el);
-        this.parentElement = document.querySelector(containerSelector)!.parentElement as HTMLElement;
+    constructor() {
+        this.element = renderFragment(MusicPlayer());
         this.playlist = this.initializePlaylist();
-        this.audioPlayer = this.createAudioPlayer(containerSelector);
+        this.audioPlayer = this.createAudioPlayer();
         this.eventEmitter = new EventEmitter();
         this.setupEventListeners();
         this.setVolume(0.9);
@@ -52,12 +49,12 @@ export class Music {
 
     /**
      * Creates and configures the WaveSurfer audio player.
-     * @param containerSelector - The CSS selector for the audio player container.
+     * @param container - The CSS selector for the audio player container.
      * @returns A configured WaveSurfer instance.
      */
-    private createAudioPlayer(containerSelector: string): WaveSurfer {
+    private createAudioPlayer(): WaveSurfer {
         return WaveSurfer.create({
-            container: containerSelector,
+            container: this.element,
             height: 18,
             width: 160,
             normalize: false,
@@ -90,12 +87,12 @@ export class Music {
         this.audioPlayer.on('finish', () => this.next());
 
         this.audioPlayer.on('play', () => {
-            this.parentElement.classList.add('playing');
+            this.element.classList.add('playing');
             this.eventEmitter.emit('play');
         });
 
         this.audioPlayer.on('pause', () => {
-            this.parentElement.classList.remove('playing');
+            this.element.classList.remove('playing');
             this.eventEmitter.emit('pause');
         });
 

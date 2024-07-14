@@ -163,7 +163,7 @@ body {
 }
 
 #mask {
-    background-image: url(/backgrounds/stadium-mask.png);
+    background-image: none;
     z-index: 1;
     pointer-events: none;
 }
@@ -197,30 +197,6 @@ body {
     height: 50px;
 }
 
-.music {
-    height: 36px;
-    width: 49px;
-    margin: 20px;
-    background: #00c08b;
-    padding: 0 5px;
-    border: 3px solid black;
-    box-sizing: content-box;
-    box-shadow: -4px 4px 0 0 #007f6e;
-    display: flex;
-    align-items: center;    
-    justify-content: space-between;
-    gap: 3px;
-    transition: width 500ms ease;
-    overflow: hidden;
-}
-
-.music .music-player {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 500ms ease;
-    width: 1px;
-}
-
 .music.playing {
     width: 220px;
 }
@@ -230,31 +206,6 @@ body {
     width: 160px;
     pointer-events: all;
     transition-delay: 500ms;
-}
-
-.btn {
-    background: #009688;
-    border: 2px solid #267f6e;
-    padding: 3px;
-    cursor: pointer;
-    border-radius: 2px;
-    width: 23px;
-}
-
-.btn:hover {
-    opacity: .8;
-    filter: hue-rotate(185deg);
-}
-
-.btn:active {
-    transform: translateY(1px);
-    opacity: 1;
-}
-
-.btn img {
-    display: block;
-    width: 100%;
-    max-width: 23px;
 }
 
 .music .btn img[alt="Pause"] {
