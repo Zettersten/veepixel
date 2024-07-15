@@ -21,9 +21,6 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6
     devDependencies:
-      '@stylexjs/rollup-plugin':
-        specifier: ^0.7.5
-        version: 0.7.5
       '@unvt/sprite-one':
         specifier: ^0.1.1
         version: 0.1.1
@@ -561,9 +558,6 @@ packages:
 
   '@stylexjs/babel-plugin@0.7.5':
     resolution: {integrity: sha512-KirLQIaOVHpuSZT37qV19Pw8x4te5x6hZ90+2VsrJ4NzwyYFpovlMNsTeT+eE9mcdp84VksIi7QnrNpMvqBJMQ==}
-
-  '@stylexjs/rollup-plugin@0.7.5':
-    resolution: {integrity: sha512-/2Ly04W/b3LQhGj3K4rgcoRKgL9LDc3Yig+vdNZFKjJ1oyGt0yt91AwKhZjE+fyWsvcWQXCreYLt8IO8g4UCcw==}
 
   '@stylexjs/shared@0.5.1':
     resolution: {integrity: sha512-3kuvLfPr1P5lbLjvtEjXmJxyBOygudhH93DA8OtNnb0H3bQjDZJQqaR/Pde67tlsdbqU5pFuaeueKkZhnuurzA==}
@@ -1698,16 +1692,6 @@ snapshots:
       '@babel/types': 7.24.8
       '@stylexjs/shared': 0.7.5
       '@stylexjs/stylex': 0.7.5
-    transitivePeerDependencies:
-      - supports-color
-
-  '@stylexjs/rollup-plugin@0.7.5':
-    dependencies:
-      '@babel/core': 7.24.8
-      '@babel/plugin-syntax-flow': 7.24.7(@babel/core@7.24.8)
-      '@babel/plugin-syntax-jsx': 7.24.7(@babel/core@7.24.8)
-      '@babel/plugin-syntax-typescript': 7.24.7(@babel/core@7.24.8)
-      '@stylexjs/babel-plugin': 0.7.5
     transitivePeerDependencies:
       - supports-color
 

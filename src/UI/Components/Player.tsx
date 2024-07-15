@@ -1,6 +1,16 @@
 import * as stylex from '@stylexjs/stylex';
 
-const styles = stylex.create({
+
+export const playerStyles = stylex.create({
+    parentPlaying: {
+        width: "220px",
+    },
+    musicPlayerPlaying: {
+        opacity: "1",
+        width: "160px",
+        pointerEvents: "all",
+        transitionDelay: "500ms"
+    },
     music: {
         height: "36px",
         width: "49px",
@@ -22,9 +32,6 @@ const styles = stylex.create({
         pointerEvents: "none",
         transition: "opacity 500ms ease",
         width: "1px"
-    },
-    playing: {
-        width: "220px",
     },
     btn: {
         background: "#009688",
@@ -55,16 +62,16 @@ const styles = stylex.create({
     }
 });
 
-export const MusicPlayer = () => {
+export const Player = () => {
     return (
-        <div id="music" {...stylex.props(styles.music)}>
-            <button id="playPause" {...stylex.props(styles.btn)}>
-                <img src="/utils/play.png" alt="Play" {...stylex.props(styles.img, styles.hide)} />
-                <img src="/utils/pause.png" alt="Pause" {...stylex.props(styles.img, styles.hide)} />
+        <div id="music" {...stylex.props(playerStyles.music)}>
+            <button id="playPause" {...stylex.props(playerStyles.btn)}>
+                <img src="/utils/play.png" alt="Play" {...stylex.props(playerStyles.img, playerStyles.hide)} />
+                <img src="/utils/pause.png" alt="Pause" {...stylex.props(playerStyles.img, playerStyles.hide)} />
             </button>
-            <div {...stylex.props(styles.player)}></div>
-            <button id="next" {...stylex.props(styles.btn)}>
-                <img src="/utils/next.png" alt="Next" {...stylex.props(styles.img)} />
+            <div {...stylex.props(playerStyles.player)}></div>
+            <button id="next" {...stylex.props(playerStyles.btn)}>
+                <img src="/utils/next.png" alt="Next" {...stylex.props(playerStyles.img)} />
             </button>
         </div>
     );

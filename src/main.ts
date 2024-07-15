@@ -5,16 +5,14 @@ import "./UI/styles.css";
 import 'virtual:stylex.css'
 import { UserManager, UserActionHandler } from "./User";
 import type { AvatarType } from "./Types";
-import { getManifest, renderFragment } from "./Utils";
-import { GameLayout } from "./UI/Components/GameLayout";
+import { renderLayout } from "./Utils/Renderer";
 
 /**
  * Initializes and starts the game.
  */
 async function initializeGame(): Promise<void> {
 
-    const layout = renderFragment(GameLayout());
-    document.body.appendChild(layout);
+    renderLayout();
 
     const floor = new Floor("#floor");
     const userManager = new UserManager(floor);

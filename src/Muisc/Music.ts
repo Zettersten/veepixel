@@ -1,7 +1,8 @@
 import WaveSurfer from 'wavesurfer.js'
+import * as stylex from '@stylexjs/stylex';
 import type { Song, EventCallback } from '../Types';
-import { EventEmitter, renderFragment } from '../Utils';
-import { MusicPlayer } from '../UI/Components/MusicPlayer';
+import { EventEmitter, domUtils } from '../Utils';
+import { playerStyles } from '../UI/Components/Player';
 
 /**
  * Manages music playback and playlist functionality.
@@ -11,6 +12,7 @@ export class Music {
     private readonly audioPlayer: WaveSurfer;
     private readonly eventEmitter: EventEmitter;
     private readonly element: HTMLElement;
+    private readonly parentElement: HTMLElement;
     private currentSongIndex: number = 0;
     private isFirstRender: boolean;
 
@@ -18,7 +20,8 @@ export class Music {
      * Creates a new Music instance.
      */
     constructor() {
-        this.element = renderFragment(MusicPlayer());
+        this.parentElement = domUtils.getManifest()["music"];
+        this.element = this.parentElement.querySelector('#playPause')?.nextSibling as HTMLElement;
         this.playlist = this.initializePlaylist();
         this.audioPlayer = this.createAudioPlayer();
         this.eventEmitter = new EventEmitter();
@@ -87,12 +90,12 @@ export class Music {
         this.audioPlayer.on('finish', () => this.next());
 
         this.audioPlayer.on('play', () => {
-            this.element.classList.add('playing');
+            this.setPlayingState(true);
             this.eventEmitter.emit('play');
         });
 
         this.audioPlayer.on('pause', () => {
-            this.element.classList.remove('playing');
+            this.setPlayingState(false);
             this.eventEmitter.emit('pause');
         });
 
@@ -232,5 +235,21 @@ export class Music {
      */
     public on(eventName: string, callback: EventCallback): void {
         this.eventEmitter.on(eventName, callback);
+    }
+
+    private setPlayingState(isPlaying: boolean = true): void {
+        const playingAttr = stylex.attrs(playerStyles.parentPlaying);
+        const playingClasses = playingAttr.class?.toString().split(' ') as string[];
+
+        const musicPlayerPlayingAttr = stylex.attrs(playerStyles.musicPlayerPlaying);
+        const musicPlayerPlayingClasses = musicPlayerPlayingAttr.class?.toString().split(' ') as string[];
+
+        if (isPlaying) {
+            this.element.classList.add(...musicPlayerPlayingClasses);
+            this.parentElement.classList.add(...playingClasses);
+        } else {
+            this.element.classList.remove(...musicPlayerPlayingClasses);
+            this.parentElement.classList.remove(...playingClasses);
+        }
     }
 }

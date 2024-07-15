@@ -197,10 +197,6 @@ body {
     height: 50px;
 }
 
-.music.playing {
-    width: 220px;
-}
-
 .music.playing .music-player {
     opacity: 1;
     width: 160px;
