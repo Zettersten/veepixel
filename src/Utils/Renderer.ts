@@ -7,9 +7,9 @@ export const renderLayout = () => {
     const nav = domUtils.renderFragment(Nav());
     const player = domUtils.renderFragment(Player());
 
-    nav.appendChild(player);
-    game.prepend(controls);
-    game.prepend(nav);
+    domUtils.appendChild(nav, player);
+    domUtils.prependChild(game, controls);
+    domUtils.prependChild(game, nav);
 
     document.body.prepend(game);
 };

@@ -1,4 +1,5 @@
 import { EventEmitter } from ".";
+import type { EventCallback } from "../Types";
 
 class DomUtils {
     private static readonly componentManifest: { [key: string]: HTMLElement } = {};
@@ -36,9 +37,9 @@ class DomUtils {
     /**
      * Retrieves the component manifest from the DomUtils.
      *
-     * @returns {Object} The component manifest.
+     * @returns {{ [key: string]: HTMLElement }} The component manifest.
      */
-    getManifest = () => DomUtils.componentManifest;
+    getManifest = (): { [key: string]: HTMLElement } => DomUtils.componentManifest;
 
     /**
      * Subscribe to a specific event with a callback function.
@@ -46,8 +47,24 @@ class DomUtils {
      * @param event - The name of the event to subscribe to.
      * @param callback - The callback function to be executed when the event occurs.
      */
-    on = (event: string, callback: (event: any) => void) => {
+    on = (event: string, callback: EventCallback) => {
         this.eventEmitter.on(event, callback);
+    }
+
+    /**
+     * Appends a child element to a parent element and emits an event.
+     * 
+     * @param parent - The parent element to append the child element to.
+     * @param child - The child element to append to the parent element.
+     */
+    appendChild = (parent: HTMLElement, child: HTMLElement) => {
+        parent.appendChild(child);
+        this.eventEmitter.emit('componentInserted', child);
+    }
+
+    prependChild = (parent: HTMLElement, child: HTMLElement) => {
+        parent.prepend(child);
+        this.eventEmitter.emit('componentInserted', child);
     }
 }
 
