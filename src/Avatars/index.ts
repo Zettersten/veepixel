@@ -4,3 +4,4 @@ export { Avatar } from "./Avatar";
 export { GaryBee } from "./GaryBee";
 export { ReflectiveRhino } from "./ReflectiveRhino";
 export { SpriteManager } from "./SpriteManager";
+export { MachoMantaRay } from "./MachoMantaRay";
