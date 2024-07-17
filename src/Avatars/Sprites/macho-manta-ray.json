@@ -781,8 +781,7 @@
       "offsetY": -2304
     }
   ],
-  "walkRight": [],
-  "walkUp": [
+  "walkRight": [
     {
       "index": 0,
       "offsetX": -1344,
@@ -812,6 +811,38 @@
       "index": 5,
       "offsetX": -2304,
       "offsetY": -2304
+    }
+  ],
+  "walkUp": [
+    {
+      "index": 0,
+      "offsetX": -2496,
+      "offsetY": 0
+    },
+    {
+      "index": 1,
+      "offsetX": -2496,
+      "offsetY": -192
+    },
+    {
+      "index": 2,
+      "offsetX": -2496,
+      "offsetY": -384
+    },
+    {
+      "index": 3,
+      "offsetX": -2496,
+      "offsetY": -576
+    },
+    {
+      "index": 4,
+      "offsetX": -2496,
+      "offsetY": -768
+    },
+    {
+      "index": 5,
+      "offsetX": -2496,
+      "offsetY": -960
     }
   ],
   "walkDown": [
