@@ -6,7 +6,8 @@ const avatars = [
   'gary-bee',
   'reflective-rhinoceros',
   'ambitious-angel',
-  'macho-manta-ray'
+  'macho-manta-ray',
+  'adventurous-astronaut'
 ];
 
 (async function () {
@@ -153,9 +154,6 @@ function transformKeyToAnimationName(key) {
   throw new Error(`Unknown key: ${key}`);
 
 }
-
-
-// const defaultAvatarSprites = {
 //   "breathBack": [
 //     {
 //       "index": 0,
