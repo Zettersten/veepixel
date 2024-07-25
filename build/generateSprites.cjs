@@ -7,7 +7,8 @@ const avatars = [
   'reflective-rhinoceros',
   'ambitious-angel',
   'macho-manta-ray',
-  'adventurous-astronaut'
+  'adventurous-astronaut',
+  'rare-robot'
 ];
 
 (async function () {

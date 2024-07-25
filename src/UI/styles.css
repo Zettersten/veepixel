@@ -157,7 +157,7 @@ body {
     max-height: 1080px;
     width: 100%;
     height: 100%;
-    background: url(/backgrounds/stadium.png) no-repeat center/cover;
+    background: url(/backgrounds/space.png) no-repeat center/cover;
     image-rendering: pixelated;
     position: relative;
 }

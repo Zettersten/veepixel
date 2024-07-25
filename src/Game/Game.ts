@@ -8,6 +8,7 @@ import { EventEmitter } from "../Utils/EventEmitter";
 import { Floor } from "./Floor";
 import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types";
 import { AdventurousAstronaut, AmbitiousAngel, MachoMantaRay } from "../Avatars";
+import { RareRobot } from "../Avatars/RareRobot";
 
 
 /**
@@ -147,6 +148,8 @@ export class Game {
                 return new MachoMantaRay();
             case 'AdventurousAstronaut':
                 return new AdventurousAstronaut();
+            case 'RareRobot':
+                return new RareRobot();
             default:
                 return new AdaptableAlien();
         }

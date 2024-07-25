@@ -6,3 +6,4 @@ export { ReflectiveRhino } from "./ReflectiveRhino";
 export { SpriteManager } from "./SpriteManager";
 export { MachoMantaRay } from "./MachoMantaRay";
 export { AdventurousAstronaut } from "./AdventurousAstronaut";
+export { RareRobot } from "./RareRobot";
