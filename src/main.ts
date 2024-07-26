@@ -21,7 +21,7 @@ async function initializeGame(): Promise<void> {
     const music = new Music();
     const game = new Game(floor, animationManager, userManager, userActionHandler);
 
-    const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhinoceros', 'GaryBee', 'AmbitiousAngel', 'MachoMantaRay', 'AdventurousAstronaut', 'RareRobot'];
+    const allAvatarTypes : AvatarType[] = ['AdaptableAlien', 'ReflectiveRhinoceros', 'GaryBee', 'AmbitiousAngel', 'MachoMantaRay', 'AdventurousAstronaut', 'RareRobot', 'EmpathyElephant'];
 
     for (let i = 0; i < allAvatarTypes.length; i++) {
         const randomAvatarType = allAvatarTypes[i];
