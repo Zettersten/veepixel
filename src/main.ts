@@ -26,7 +26,13 @@ async function initializeGame(): Promise<void> {
         'ReflectiveRhinoceros',
         'GaryBee',
         'AmbitiousAngel',
-        'MachoMantaRay', 'AdventurousAstronaut', 'RareRobot', 'EmpathyElephant', 'ArbitragingAdmiral'];
+        'MachoMantaRay', 
+        'AdventurousAstronaut', 
+        'RareRobot', 
+        'EmpathyElephant', 
+        'ArbitragingAdmiral', 
+        'HeartTrooper'
+    ];
 
     for (let i = 0; i < allAvatarTypes.length; i++) {
         const randomAvatarType = allAvatarTypes[i];
