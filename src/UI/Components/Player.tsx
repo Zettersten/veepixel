@@ -1,6 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
 
-
 export const playerStyles = stylex.create({
     parentPlaying: {
         width: "220px",

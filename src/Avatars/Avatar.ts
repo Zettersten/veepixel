@@ -2,6 +2,8 @@ import { Floor } from "../Game/Floor";
 import { AvatarOptions, AvatarSprite, AvatarSpriteType, AvatarSprites, EventCallback, MovementDirectionType, Rect } from "../Types";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { SpriteManager } from "../Avatars/SpriteManager";
+import { domUtils } from "../Utils";
+import { Avatar as AvatarElement } from "../UI/Components";
 
 /**
  * Represents an avatar in the game.
@@ -41,14 +43,8 @@ export class Avatar {
      * Creates the avatar's DOM element.
      */
     private createAvatarElement(): HTMLDivElement {
-        const element = document.createElement('div');
-        element.classList.add('avatar');
-        element.style.cssText = `
-            width: ${this.spriteManager.width}px;
-            height: ${this.spriteManager.height}px;
-            background-image: url(${this.options.path});
-        `;
-        return element;
+        const element = domUtils.renderFragment(AvatarElement(this.spriteManager.width, this.spriteManager.height, this.options.path));
+        return element as HTMLDivElement;
     }
 
     /**
@@ -84,7 +80,7 @@ export class Avatar {
      */
     public setPosition(x: number, y: number): void {
         this.position = { x, y };
-        this.element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        this.element.style.setProperty('--transform', `translate3d(${x}px, ${y}px, 0)`);
         this.eventEmitter.emit('positionChanged', this.position);
     }
 
@@ -148,7 +144,7 @@ export class Avatar {
      * Sets the sprite position for the avatar.
      */
     private setSpritePosition(sprite: AvatarSprite): void {
-        this.element.style.backgroundPosition = `${sprite.offsetX}px ${sprite.offsetY}px`;
+        this.element.style.setProperty('--background-position', `${sprite.offsetX}px ${sprite.offsetY}px`);
     }
 
     /**
@@ -178,7 +174,7 @@ export class Avatar {
      * @param zIndex - The z-index value to set.
      */
     public setZIndex(zIndex: number): void {
-        this.element.style.zIndex = zIndex.toString();
+        this.element.style.setProperty('--z-index', zIndex.toString());
     }
 
     /**

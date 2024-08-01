@@ -151,21 +151,30 @@ body {
     overflow: hidden;
 }
 
+.bg.bg-space {
+    background-image: url(/backgrounds/space.png);
+}
+.bg.bg-arcade {
+    background-image: url(/backgrounds/arcade.png);
+}
+.bg.bg-jungle {
+    background-image: url(/backgrounds/jungle.png);
+}
+.bg.bg-stadium {
+    background-image: url(/backgrounds/stadium.png);
+}
+
 /* Style the main container div and mask */
-#game, #mask {
+#game {
     max-width: 1920px;
     max-height: 1080px;
     width: 100%;
     height: 100%;
-    background: url(/backgrounds/space.png) no-repeat center/cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     image-rendering: pixelated;
     position: relative;
-}
-
-#mask {
-    background-image: none;
-    z-index: 1;
-    pointer-events: none;
 }
 
 /* Style the floor element */
@@ -239,10 +248,29 @@ body {
 
 .avatar {
     background-repeat: no-repeat;
-    background-position: 0px 0px;
+    background-position: var(--background-position);
     position: absolute;
-    transform: translate3d(0px, 0px, 0);
+    transform: var(--transform);
     transform-origin: left top;
     will-change: transform;
     cursor: pointer;
+    width: var(--width);
+    height: var(--height);
+    background-image: var(--background-image);
+    z-index: var(--z-index);
+}
+
+.avatar::before {
+    content: "";
+    position: absolute;
+    background-image: var(--background-image);
+    background-position: var(--background-position);
+    width: 100%;
+    height: 100%;
+    bottom: 10px;
+    left: 0;
+    border-radius: 100%;
+    z-index: 0;
+    transform: scaleX(.9) scaleY(.4) translateX(0) translateY(320px) rotate(180deg);
+    filter: brightness(0) blur(1px) opacity(.2);
 }
