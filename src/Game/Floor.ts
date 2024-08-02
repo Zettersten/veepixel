@@ -41,6 +41,13 @@ export class Floor {
         }
     }
 
+    public calculateZIndex(y: number): number {
+        const floorHeight = this.element.clientHeight;
+        // Assuming the floor starts at y=0 and ends at y=floorHeight
+        // Z-index will range from 1 to 1000 (you can adjust this range as needed)
+        return Math.floor((y / floorHeight) * 999) + 1;
+    }
+
     /**
      * Finds a random free position for an avatar.
      * @param avatar - The avatar to place.

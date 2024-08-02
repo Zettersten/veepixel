@@ -163,6 +163,9 @@ body {
 .bg.bg-stadium {
     background-image: url(/backgrounds/stadium.png);
 }
+.bg.bg-glacier {
+    background-image: url(/backgrounds/glacier.png);
+}
 
 /* Style the main container div and mask */
 #game {
@@ -271,6 +274,6 @@ body {
     left: 0;
     border-radius: 100%;
     z-index: 0;
-    transform: scaleX(.9) scaleY(.4) translateX(0) translateY(320px) rotate(180deg);
+    transform: scaleX(-.9) scaleY(.4) translateX(0) translateY(320px) rotate(180deg);
     filter: brightness(0) blur(1px) opacity(.2);
 }

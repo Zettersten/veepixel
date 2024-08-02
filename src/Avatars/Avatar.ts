@@ -81,6 +81,10 @@ export class Avatar {
     public setPosition(x: number, y: number): void {
         this.position = { x, y };
         this.element.style.setProperty('--transform', `translate3d(${x}px, ${y}px, 0)`);
+
+        const zIndex = this.floor.calculateZIndex(y);
+        this.setZIndex(zIndex);
+
         this.eventEmitter.emit('positionChanged', this.position);
     }
 
@@ -118,6 +122,9 @@ export class Avatar {
                     this.startAnimation('walkDown');
                     break;
             }
+        } else {
+            const zIndex = this.floor.calculateZIndex(constrained.y);
+            this.setZIndex(zIndex);
         }
     }
 
