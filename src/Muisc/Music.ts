@@ -26,7 +26,7 @@ export class Music {
         this.audioPlayer = this.createAudioPlayer();
         this.eventEmitter = new EventEmitter();
         this.setupEventListeners();
-        this.setVolume(0.9);
+        this.setVolume(100);
         this.isFirstRender = true;
     }
 

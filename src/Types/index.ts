@@ -118,4 +118,4 @@ export type EventCallback = (...args: any[]) => void;
  * Represents the type of avatar.
  * @typedef {'ReflectiveRhino' | 'GaryBee' | 'AdaptableAlien'} AvatarType
  */
-export type AvatarType = 'ReflectiveRhinoceros' | 'GaryBee' |  'AdaptableAlien' | 'AmbitiousAngel' | 'MachoMantaRay' | 'AdventurousAstronaut' | 'RareRobot' | 'EmpathyElephant' | 'ArbitragingAdmiral' | 'HeartTrooper';
+export type AvatarType = 'PoorRelationship' | 'ReflectiveRhinoceros' | 'GaryBee' |  'AdaptableAlien' | 'AmbitiousAngel' | 'MachoMantaRay' | 'AdventurousAstronaut' | 'RareRobot' | 'EmpathyElephant' | 'ArbitragingAdmiral' | 'HeartTrooper';

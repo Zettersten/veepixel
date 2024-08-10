@@ -10,3 +10,4 @@ export { RareRobot } from "./RareRobot";
 export { EmpathyElephant } from "./EmpathyElephant";
 export { ArbitragingAdmiral } from "./ArbitragingAdmiral";
 export { HeartTrooper } from "./HeartTrooper";
+export { PoorRelationship } from "./PoorRelationship";

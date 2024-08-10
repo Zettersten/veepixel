@@ -11,7 +11,8 @@ const avatars = [
   'rare-robot',
   'empathy-elephant',
   'arbitraging-admiral',
-  'heart-trooper'
+  'heart-trooper',
+  'poor-relationship'
 ];
 
 (async function () {

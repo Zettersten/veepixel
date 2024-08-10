@@ -7,7 +7,7 @@ import { User, UserActionHandler, UserManager } from "../User";
 import { EventEmitter } from "../Utils/EventEmitter";
 import { Floor } from "./Floor";
 import type { AvatarType, AvatarFactory, UserAction, EventCallback } from "../Types";
-import { AdventurousAstronaut, AmbitiousAngel, EmpathyElephant, MachoMantaRay, RareRobot, ArbitragingAdmiral, HeartTrooper } from "../Avatars";
+import { AdventurousAstronaut, AmbitiousAngel, EmpathyElephant, MachoMantaRay, RareRobot, ArbitragingAdmiral, HeartTrooper, PoorRelationship } from "../Avatars";
 
 
 /**
@@ -155,6 +155,8 @@ export class Game {
                 return new ArbitragingAdmiral();
             case 'HeartTrooper':
                 return new HeartTrooper();
+            case 'PoorRelationship':
+                return new PoorRelationship();
             default:
                 return new AdaptableAlien();
         }

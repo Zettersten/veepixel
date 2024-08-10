@@ -31,7 +31,8 @@ async function initializeGame(): Promise<void> {
         'RareRobot', 
         'EmpathyElephant', 
         'ArbitragingAdmiral', 
-        'HeartTrooper'
+        'HeartTrooper',
+        'PoorRelationship'
     ];
 
     for (let i = 0; i < allAvatarTypes.length; i++) {
